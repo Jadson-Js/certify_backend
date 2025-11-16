@@ -5,6 +5,7 @@ import type {
   IFindAllUsersOutputDTO,
 } from "./IFindAllUsers.js";
 import { TYPES } from "../../../../infra/container/types.js";
+import { toDTO } from "./mapper.js";
 
 @injectable()
 export class FindAllUsersUseCase implements IFindAllUsersUseCase {
@@ -16,13 +17,6 @@ export class FindAllUsersUseCase implements IFindAllUsersUseCase {
   async execute(): Promise<IFindAllUsersOutputDTO[]> {
     const users = await this.userRepository.findAllUsers();
 
-    const mapper = users.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      created_at: user.created_at,
-    }));
-
-    return mapper;
+    return toDTO(users);
   }
 }

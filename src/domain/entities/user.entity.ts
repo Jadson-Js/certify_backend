@@ -1,4 +1,15 @@
-export class UserEntity {
+export interface IUserEntity {
+  id: string;
+  name: string;
+  cnpj: string;
+  email: string;
+  password: string;
+  email_verified: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export class UserEntity implements IUserEntity {
   constructor(
     private readonly _id: string,
     private readonly _name: string,
