@@ -7,4 +7,7 @@ export const TYPES = {
 
   // Controllers
   UserController: Symbol.for("UserController"),
+
+  // Routes
+  UserRoutes: Symbol.for("UserRoutes"),
 };

@@ -5,7 +5,7 @@ import express, {
   type Router,
 } from "express";
 
-export function createServer(userRoutes: Router) {
+export function createServer(routes: Router) {
   const app = express();
   app.use(express.json());
 
@@ -13,7 +13,7 @@ export function createServer(userRoutes: Router) {
     res.status(200).json({ status: "ok" });
   });
 
-  app.use("/users", userRoutes);
+  app.use("/api/v1", routes);
 
   // eslint-disable-next-line
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

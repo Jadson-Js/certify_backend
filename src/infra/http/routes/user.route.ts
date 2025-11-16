@@ -1,10 +1,20 @@
 import { Router } from "express";
 import { type UserController } from "../controllers/user.controller.js";
+import { TYPES } from "../../container/types.js";
+import { inject, injectable } from "inversify";
 
-export function createUserRoutes(userController: UserController): Router {
-  const router = Router();
+@injectable()
+export class UserRoutes {
+  constructor(
+    @inject(TYPES.UserController)
+    private readonly userController: UserController,
+  ) {}
 
-  router.get("/", (req, res) => userController.findAll(req, res));
+  execute() {
+    const router = Router();
 
-  return router;
+    router.get("/", this.userController.findAll.bind(this.userController));
+
+    return router;
+  }
 }

@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-// Assumindo que você usa Express
 import type { Request, Response } from "express";
 import { TYPES } from "../../container/types.js";
 import type { IFindAllUsersUseCase } from "../../../application/useCase/users/findAllUsers/IFindAllUsers.js";
