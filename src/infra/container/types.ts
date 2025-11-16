@@ -3,7 +3,7 @@ export const TYPES = {
   IUserRepository: Symbol.for("IUserRepository"),
 
   // Use Cases
-  FindAllUsersUseCase: Symbol.for("FindAllUsersUseCase"),
+  IFindAllUsersUseCase: Symbol.for("IFindAllUsersUseCase"),
 
   // Controllers
   UserController: Symbol.for("UserController"),

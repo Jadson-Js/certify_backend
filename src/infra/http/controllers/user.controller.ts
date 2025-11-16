@@ -1,18 +1,16 @@
 import { inject, injectable } from "inversify";
 // Assumindo que você usa Express
 import type { Request, Response } from "express";
-import { FindAllUsersUseCase } from "../../../application/useCase/users/findAllUsers/FindAllUsersUseCase.js";
 import { TYPES } from "../../container/types.js";
+import type { IFindAllUsersUseCase } from "../../../application/useCase/users/findAllUsers/IFindAllUsers.js";
 
 @injectable()
 export class UserController {
   constructor(
-    // O Inversify vai injetar o UseCase aqui
-    @inject(TYPES.FindAllUsersUseCase)
-    private readonly findAllUsersUseCase: FindAllUsersUseCase,
+    @inject(TYPES.IFindAllUsersUseCase)
+    private readonly findAllUsersUseCase: IFindAllUsersUseCase,
   ) {}
 
-  // Exemplo de método que sua rota chamaria
   async findAll(req: Request, res: Response) {
     try {
       const users = await this.findAllUsersUseCase.execute();

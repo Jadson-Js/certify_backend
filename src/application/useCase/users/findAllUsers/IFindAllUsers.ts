@@ -4,3 +4,7 @@ export interface IFindAllUsersOutputDTO {
   email: string;
   created_at: Date;
 }
+
+export interface IFindAllUsersUseCase {
+  execute(): Promise<IFindAllUsersOutputDTO[]>;
+}

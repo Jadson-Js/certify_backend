@@ -7,32 +7,29 @@ export class UserRepositoryPostgres implements IUserRepository {
   async findAllUsers(): Promise<UserEntity[]> {
     const users: UserEntity[] = [
       new UserEntity(
-        "1", // _id
-        "admin", // _name
-        "123", // _cnpj
-        "admin@admin.com", // _email
-        "admin123", // _password (hash, idealmente)
-        true, // _email_verified
-        new Date("2024-10-20T10:00:00Z"), // _created_at
-        new Date("2024-10-20T10:00:00Z"), // _updated_at
+        "1",
+        "admin",
+        "123",
+        "admin@admin.com",
+        "admin123", // _password (hash,
+        true,
+        new Date("2024-10-20T10:00:00Z"),
+        new Date("2024-10-20T10:00:00Z"),
       ),
-
-      // Você pode adicionar mais instâncias
       new UserEntity(
-        "2", // _id
-        "user2", // _name
-        "456", // _cnpj
-        "user2@test.com", // _email
-        "pass456", // _password
-        false, // _email_verified
-        new Date(), // _created_at
-        new Date(), // _updated_at
+        "2",
+        "user",
+        "456",
+        "user@user.com",
+        "user123",
+        true,
+        new Date(),
+        new Date(),
       ),
     ];
 
     await new Promise((resolve) => setTimeout(resolve, 20));
 
-    // Agora 'users' é um array de UserEntity reais, e o TypeScript fica feliz.
     return users;
   }
 }
