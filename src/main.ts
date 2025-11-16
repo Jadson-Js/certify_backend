@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { createServer } from "./infra/http/server.js";
-
 import { env } from "./environments/const.js";
 import { setupRoutes } from "./infra/http/routes/index.route.js";
 import { container } from "./infra/container/inversify.config.js";

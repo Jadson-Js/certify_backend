@@ -1,7 +1,6 @@
 export interface IUserEntity {
   id: string;
   name: string;
-  cnpj: string;
   email: string;
   password: string;
   email_verified: boolean;
@@ -13,7 +12,6 @@ export class UserEntity implements IUserEntity {
   constructor(
     private readonly _id: string,
     private readonly _name: string,
-    private readonly _cnpj: string,
     private readonly _email: string,
     private readonly _password: string,
     private readonly _email_verified: boolean,
@@ -35,10 +33,6 @@ export class UserEntity implements IUserEntity {
 
   get password(): string {
     return this._password;
-  }
-
-  get cnpj(): string {
-    return this._cnpj;
   }
 
   get email_verified(): boolean {
