@@ -1,35 +1,21 @@
 import { injectable } from "inversify";
-import { UserEntity } from "../../../../domain/entities/user.entity.js";
+import { type IUserEntity } from "../../../../domain/entities/user.entity.js";
 import type { IUserRepository } from "../../../../domain/repositories/user.repository.js";
+import { PrismaClient } from "../../../../../generated/prisma/client.js";
+import type { ICreateUserInputDTO } from "../../../http/dtos/user/ICreateUser.js";
+const prisma = new PrismaClient();
 
 @injectable()
 export class UserRepositoryPostgres implements IUserRepository {
-  async findAllUsers(): Promise<UserEntity[]> {
-    const users: UserEntity[] = [
-      new UserEntity(
-        "1",
-        "admin",
-        "123",
-        "admin@admin.com",
-        "admin123", // _password (hash,
-        true,
-        new Date("2024-10-20T10:00:00Z"),
-        new Date("2024-10-20T10:00:00Z"),
-      ),
-      new UserEntity(
-        "2",
-        "user",
-        "456",
-        "user@user.com",
-        "user123",
-        true,
-        new Date(),
-        new Date(),
-      ),
-    ];
-
-    await new Promise((resolve) => setTimeout(resolve, 20));
+  async findAllUsers(): Promise<IUserEntity[]> {
+    const users = await prisma.user.findMany();
 
     return users;
+  }
+
+  async createUser(params: ICreateUserInputDTO): Promise<IUserEntity> {
+    const user: IUserEntity = await prisma.user.create({ data: params });
+
+    return user;
   }
 }

@@ -13,7 +13,8 @@ export class UserRoutes {
   execute() {
     const router = Router();
 
-    router.get("/", this.userController.findAll.bind(this.userController));
+    router.get("/", this.userController.findAllUsers.bind(this.userController));
+    router.post("/", this.userController.createUser.bind(this.userController));
 
     return router;
   }

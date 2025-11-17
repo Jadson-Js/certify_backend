@@ -1,9 +1,4 @@
-export interface IFindAllUsersOutputDTO {
-  id: string;
-  name: string;
-  email: string;
-  created_at: Date;
-}
+import type { IFindAllUsersOutputDTO } from "../../../../infra/http/dtos/user/IFindAllUsers.js";
 
 export interface IFindAllUsersUseCase {
   execute(): Promise<IFindAllUsersOutputDTO[]>;

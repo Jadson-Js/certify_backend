@@ -1,11 +1,9 @@
 import { inject, injectable } from "inversify";
 import type { IUserRepository } from "../../../../domain/repositories/user.repository.js";
-import type {
-  IFindAllUsersUseCase,
-  IFindAllUsersOutputDTO,
-} from "./IFindAllUsers.js";
+import type { IFindAllUsersUseCase } from "./IFindAllUsers.js";
 import { TYPES } from "../../../../infra/container/types.js";
 import { toDTO } from "./mapper.js";
+import type { IFindAllUsersOutputDTO } from "../../../../infra/http/dtos/user/IFindAllUsers.js";
 
 @injectable()
 export class FindAllUsersUseCase implements IFindAllUsersUseCase {

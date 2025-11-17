@@ -3,7 +3,7 @@ export interface IUserEntity {
   name: string;
   email: string;
   password: string;
-  email_verified: boolean;
+  is_verified: boolean;
   created_at: Date;
   updated_at: Date;
 }
@@ -14,7 +14,7 @@ export class UserEntity implements IUserEntity {
     private readonly _name: string,
     private readonly _email: string,
     private readonly _password: string,
-    private readonly _email_verified: boolean,
+    private readonly _is_verified: boolean,
     private readonly _created_at: Date,
     private readonly _updated_at: Date,
   ) {}
@@ -35,8 +35,8 @@ export class UserEntity implements IUserEntity {
     return this._password;
   }
 
-  get email_verified(): boolean {
-    return this._email_verified;
+  get is_verified(): boolean {
+    return this._is_verified;
   }
 
   get created_at(): Date {

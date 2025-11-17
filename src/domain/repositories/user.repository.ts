@@ -1,5 +1,7 @@
-import { UserEntity } from "../entities/user.entity.js";
+import type { ICreateUserInputDTO } from "../../infra/http/dtos/user/ICreateUser.js";
+import { type IUserEntity } from "../entities/user.entity.js";
 
 export interface IUserRepository {
-  findAllUsers(): Promise<UserEntity[]>;
+  findAllUsers(): Promise<IUserEntity[]>;
+  createUser(params: ICreateUserInputDTO): Promise<IUserEntity>;
 }
