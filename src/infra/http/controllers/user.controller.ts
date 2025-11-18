@@ -25,14 +25,16 @@ export class UserController {
   }
 
   async createUser(req: Request, res: Response) {
-    try {
-      const params = req.body;
-      const response = await this.createUserUseCase.execute(params);
+    const data = req.body;
 
-      return res.status(201).json(response);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
+    const input = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
+
+    const response = await this.createUserUseCase.execute(input);
+
+    return res.status(201).json(response);
   }
 }
