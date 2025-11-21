@@ -22,6 +22,11 @@ export class UserRoutes {
       this.userController.createUser.bind(this.userController),
     );
 
+    router.delete(
+      "/",
+      this.userController.deleteAllUsers.bind(this.userController),
+    );
+
     return router;
   }
 }

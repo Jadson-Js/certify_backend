@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { TYPES } from "../../container/types.js";
 import type { IFindAllUsersUseCase } from "../../../application/useCase/users/findAllUsers/IFindAllUsers.js";
 import type { ICreateUserUseCase } from "../../../application/useCase/users/createUser/ICreateUser.js";
+import type { IDeleteAllUsersUseCase } from "../../../application/useCase/users/deleteAllUsers/IDeleteAllUsers.js";
 
 @injectable()
 export class UserController {
@@ -12,6 +13,9 @@ export class UserController {
 
     @inject(TYPES.ICreateUserUseCase)
     private readonly createUserUseCase: ICreateUserUseCase,
+
+    @inject(TYPES.IDeleteAllUsersUseCase)
+    private readonly deleteAllUsersUseCase: IDeleteAllUsersUseCase,
   ) {}
 
   async findAllUsers(req: Request, res: Response) {
@@ -36,5 +40,11 @@ export class UserController {
     const response = await this.createUserUseCase.execute(input);
 
     return res.status(201).json(response);
+  }
+
+  async deleteAllUsers(req: Request, res: Response) {
+    await this.deleteAllUsersUseCase.execute();
+
+    return res.status(200).json();
   }
 }

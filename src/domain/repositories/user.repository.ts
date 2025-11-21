@@ -4,4 +4,5 @@ import { type IUserEntity } from "../entities/user.entity.js";
 export interface IUserRepository {
   findAllUsers(): Promise<IUserEntity[]>;
   createUser(params: ICreateUserInputDTO): Promise<IUserEntity>;
+  deleteAllUsers(): Promise<null>;
 }

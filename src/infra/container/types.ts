@@ -5,6 +5,7 @@ export const TYPES = {
   // Use Cases
   IFindAllUsersUseCase: Symbol.for("IFindAllUsersUseCase"),
   ICreateUserUseCase: Symbol.for("ICreateUserUseCase"),
+  IDeleteAllUsersUseCase: Symbol.for("IDeleteAllUsersUseCase"),
 
   // Controllers
   UserController: Symbol.for("UserController"),

@@ -6,6 +6,7 @@ import { FindAllUsersUseCase } from "../../application/useCase/users/findAllUser
 import { UserController } from "../http/controllers/user.controller.js";
 import { UserRoutes } from "../http/routes/user.route.js";
 import { CreateUserUseCase } from "../../application/useCase/users/createUser/CreateUserUseCase.js";
+import { DeleteAllUsersUseCase } from "../../application/useCase/users/deleteAllUsers/DeleteAllUsersUseCase.js";
 
 export const container: Container = new Container();
 
@@ -24,6 +25,11 @@ container
 container
   .bind(TYPES.ICreateUserUseCase)
   .to(CreateUserUseCase)
+  .inSingletonScope();
+
+container
+  .bind(TYPES.IDeleteAllUsersUseCase)
+  .to(DeleteAllUsersUseCase)
   .inSingletonScope();
 
 // CONTROLLERS

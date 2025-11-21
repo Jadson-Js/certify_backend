@@ -18,4 +18,10 @@ export class UserRepositoryPostgres implements IUserRepository {
 
     return user;
   }
+
+  async deleteAllUsers(): Promise<null> {
+    await prisma.user.deleteMany();
+
+    return null;
+  }
 }
