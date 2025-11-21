@@ -16,6 +16,7 @@ export class UserRoutes {
     const router = Router();
 
     router.get("/", this.userController.findAllUsers.bind(this.userController));
+
     router.post(
       "/",
       validate(createUserSchema),

@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import type { IUserRepository } from "../../../../domain/repositories/user.repository.js";
+import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 import type { IDeleteAllUsersUseCase } from "./IDeleteAllUsers.js";
 import { TYPES } from "../../../../infra/container/types.js";
 

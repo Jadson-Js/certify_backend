@@ -5,7 +5,7 @@ import express, {
   type Router,
 } from "express";
 import "express-async-errors";
-import { AppError } from "../../error/AppError.js";
+import { AppError } from "../../shared/error/AppError.js";
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,

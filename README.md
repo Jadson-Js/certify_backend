@@ -1,35 +1,34 @@
-/src
-├── domain # 1. Camada mais interna (Entidades)
-│ ├── entities # (Ex: User, Product)
-│ │ └── user.entity.ts
-│ └── repositories # (Contratos/Interfaces)
-│ └── user.repository.interface.ts
+src/
+├── application/
+│ └── useCases/
+│ └── user/
+│ └── create/
+│ ├── CreateUserUseCase.ts
+│ ├── ICreateUserUseCase.ts
+│ └── UserMapper.ts
 │
-├── application # 2. Camada de Casos de Uso
-│ ├── use-cases # (Orquestra as regras de negócio)
-│ │ ├── create-user
-│ │ │ ├── create-user.use-case.ts
-│ │ │ └── create-user.dto.ts
-│ │ └── find-user-by-id
-│ │ ├── find-user-by-id.use-case.ts
-│ │ └── find-user-by-id.dto.ts
-│ └── services # (Interfaces de serviços externos, ex: IEmailService)
+├── domain/
+│ ├── entities/
+│ │ └── User.ts
+│ └── repositories/
+│ └── IUserRepository.ts  
 │
-├── infra # 3. Camada mais externa (Frameworks e Drivers)
-│ ├── http # (Mecanismo de entrega: API REST, gRPC, etc.)
-│ │ ├── controllers # (Recebe requisições HTTP, ex: Express)
-│ │ │ └── user.controller.ts
-│ │ ├── routes
-│ │ │ └── user.routes.ts
-│ │ └── server.ts # (Inicia o servidor Node.js/Express)
+├── infra/
+│ ├── database/
+│ │ └── postgres/
+│ │ └── user.repository.postgres.ts  
 │ │
-│ ├── database # (Implementação do Banco de Dados)
-│ │ ├── postgresql # <-- O POSTGRES VIVE AQUI
-│ │ │ ├── repositories
-│ │ │ │ └── user.repository.postgres.ts # (Implementação REAL da interface)
-│ │ │ ├── models # (Se usar ORM como TypeORM ou Prisma)
-│ │ │ │ └── user.model.ts
-│ │ │ └── connection.ts # (Configuração da conexão com o Postgres)
-│ │ └── migrations
+│ └── http/
+│ ├── controllers/
+│ │ └── CreateUserController.ts
+│ ├── routes/
+│ │ └── user.routes.ts
+│ └── app.ts <-- Config do Express (server)
 │
-└── main.ts # Ponto de entrada: Inicializa e injeta dependências
+├── shared/ <-- Novo agrupamento
+│ ├── errors/
+│ │ └── AppError.ts
+│ └── env/
+│ └── index.ts
+│
+└── main.ts <-- Entry Point (Starta tudo)

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { type IUserEntity } from "../../../../domain/entities/user.entity.js";
-import type { IUserRepository } from "../../../../domain/repositories/user.repository.js";
+import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 import { PrismaClient } from "../../../../../generated/prisma/client.js";
 import type { ICreateUserInputDTO } from "../../../http/dtos/user/ICreateUser.js";
 const prisma = new PrismaClient();

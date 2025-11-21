@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import type { Request, Response } from "express";
 import { TYPES } from "../../container/types.js";
 import type { IFindAllUsersUseCase } from "../../../application/useCase/users/findAllUsers/IFindAllUsers.js";
-import type { ICreateUserUseCase } from "../../../application/useCase/users/createUser/ICreateUser.js";
+import type { ICreateUserUseCase } from "../../../application/useCase/users/createUser/ICreateUserUseCase.js";
 import type { IDeleteAllUsersUseCase } from "../../../application/useCase/users/deleteAllUsers/IDeleteAllUsers.js";
 
 @injectable()

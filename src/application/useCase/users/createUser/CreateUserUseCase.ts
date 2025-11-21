@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import type { ICreateUserUseCase } from "./ICreateUser.js";
+import type { ICreateUserUseCase } from "./ICreateUserUseCase.js";
 import { TYPES } from "../../../../infra/container/types.js";
-import type { IUserRepository } from "../../../../domain/repositories/user.repository.js";
+import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 import { toDTO } from "./mapper.js";
 import type {
   ICreateUserInputDTO,
