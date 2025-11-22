@@ -7,6 +7,7 @@ import { UserController } from "../http/controllers/user.controller.js";
 import { UserRoutes } from "../http/routes/user.route.js";
 import { CreateUserUseCase } from "../../application/useCase/users/createUser/CreateUserUseCase.js";
 import { DeleteAllUsersUseCase } from "../../application/useCase/users/deleteAllUsers/DeleteAllUsersUseCase.js";
+import { FindUserByIdUseCase } from "../../application/useCase/users/findUserById/FindUserByIdUseCase.js";
 
 export const container: Container = new Container();
 
@@ -20,6 +21,11 @@ container
 container
   .bind(TYPES.IFindAllUsersUseCase)
   .to(FindAllUsersUseCase)
+  .inSingletonScope();
+
+container
+  .bind(TYPES.IFindUserByIdUseCase)
+  .to(FindUserByIdUseCase)
   .inSingletonScope();
 
 container
