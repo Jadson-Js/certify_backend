@@ -4,6 +4,7 @@ import { TYPES } from "../../container/types.js";
 import { inject, injectable } from "inversify";
 import { validate } from "../middlewares/validate.js";
 import { createUserSchema } from "../middlewares/zod/user.schema.js";
+import passport from "passport";
 
 @injectable()
 export class UserRoutes {
@@ -25,6 +26,7 @@ export class UserRoutes {
 
     router.delete(
       "/",
+      passport.authenticate("local", { session: false }),
       this.userController.deleteAllUsers.bind(this.userController),
     );
 
