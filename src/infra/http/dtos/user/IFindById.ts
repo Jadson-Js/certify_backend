@@ -1,8 +1,8 @@
-export interface IFindUserByIdInputDTO {
+export interface IFindByIdInputDTO {
   id: string;
 }
 
-export interface IFindUserByIdOutputDTO {
+export interface IFindByIdOutputDTO {
   id: string;
   name: string;
   email: string;

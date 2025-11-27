@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { UserRoutes } from "./user.route.js";
 import type { Container } from "inversify";
+import type { UserRoutes } from "./user.route.js";
 import { TYPES } from "../../container/types.js";
 
 export function setupRoutes(container: Container) {

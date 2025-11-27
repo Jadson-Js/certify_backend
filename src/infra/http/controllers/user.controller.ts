@@ -1,31 +1,31 @@
 import { inject, injectable } from "inversify";
-import type { Request, Response } from "express";
+import type { IFindAllUseCase } from "../../../application/useCase/users/findAll/IFindAll.js";
 import { TYPES } from "../../container/types.js";
-import type { IFindAllUsersUseCase } from "../../../application/useCase/users/findAllUsers/IFindAllUsers.js";
-import type { ICreateUserUseCase } from "../../../application/useCase/users/createUser/ICreateUserUseCase.js";
-import type { IDeleteAllUsersUseCase } from "../../../application/useCase/users/deleteAllUsers/IDeleteAllUsers.js";
-import type { IFindUserByIdUseCase } from "../../../application/useCase/users/findUserById/iFindUserByIdUseCase.js";
+import type { IFindByIdUseCase } from "../../../application/useCase/users/findById/IFindByIdUseCase.js";
+import type { ICreateUseCase } from "../../../application/useCase/users/create/ICreateUseCase.js";
+import type { IDeleteAllUseCase } from "../../../application/useCase/users/deleteAll/IDeleteAllUsers.js";
 import { BadRequestError } from "../../../shared/error/AppError.js";
+import type { Request, Response } from "express";
 
 @injectable()
 export class UserController {
   constructor(
-    @inject(TYPES.IFindAllUsersUseCase)
-    private readonly findAllUsersUseCase: IFindAllUsersUseCase,
+    @inject(TYPES.IFindAllUseCase)
+    private readonly findAllUseCase: IFindAllUseCase,
 
-    @inject(TYPES.IFindUserByIdUseCase)
-    private readonly findUserByIdUseCase: IFindUserByIdUseCase,
+    @inject(TYPES.IFindByIdUseCase)
+    private readonly findByIdUseCase: IFindByIdUseCase,
 
-    @inject(TYPES.ICreateUserUseCase)
-    private readonly createUserUseCase: ICreateUserUseCase,
+    @inject(TYPES.ICreateUseCase)
+    private readonly createUseCase: ICreateUseCase,
 
-    @inject(TYPES.IDeleteAllUsersUseCase)
-    private readonly deleteAllUsersUseCase: IDeleteAllUsersUseCase,
+    @inject(TYPES.IDeleteAllUseCase)
+    private readonly deleteAllUseCase: IDeleteAllUseCase,
   ) {}
 
-  async findAllUsers(req: Request, res: Response) {
+  async findAll(req: Request, res: Response) {
     try {
-      const response = await this.findAllUsersUseCase.execute();
+      const response = await this.findAllUseCase.execute();
       return res.status(200).json(response);
     } catch (error) {
       console.error(error);
@@ -33,7 +33,7 @@ export class UserController {
     }
   }
 
-  async findUserById(req: Request, res: Response) {
+  async findById(req: Request, res: Response) {
     try {
       const id = req.params.id;
 
@@ -41,7 +41,7 @@ export class UserController {
         throw new BadRequestError();
       }
 
-      const response = await this.findUserByIdUseCase.execute({ id });
+      const response = await this.findByIdUseCase.execute({ id });
       return res.status(200).json(response);
     } catch (error) {
       console.error(error);
@@ -49,7 +49,7 @@ export class UserController {
     }
   }
 
-  async createUser(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const data = req.body;
 
     const input = {
@@ -58,13 +58,13 @@ export class UserController {
       password: data.password,
     };
 
-    const response = await this.createUserUseCase.execute(input);
+    const response = await this.createUseCase.execute(input);
 
     return res.status(201).json(response);
   }
 
-  async deleteAllUsers(req: Request, res: Response) {
-    await this.deleteAllUsersUseCase.execute();
+  async deleteAll(req: Request, res: Response) {
+    await this.deleteAllUseCase.execute();
 
     return res.status(200).json();
   }

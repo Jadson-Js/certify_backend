@@ -1,7 +1,7 @@
 import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
-import type { ICreateUserOutputDTO } from "../../../../infra/http/dtos/user/ICreateUser.js";
+import type { ICreateOutputDTO } from "../../../../infra/http/dtos/user/ICreate.js";
 
-export function toDTO(user: IUserEntity): ICreateUserOutputDTO {
+export function toDTO(user: IUserEntity): ICreateOutputDTO {
   const mapper = {
     id: user.id,
     name: user.name,

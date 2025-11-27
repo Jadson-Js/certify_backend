@@ -1,9 +1,9 @@
 import { sign, verify, type SignOptions } from "jsonwebtoken";
-import type { IAuthService } from "../../domain/services/IAuthService.js";
 import { env } from "../../shared/environments/const.js";
 import { InternalServerError } from "../../shared/error/AppError.js";
+import type { IJwtService } from "../../domain/services/IJwtService.js";
 
-export class AuthService implements IAuthService {
+export class JwtService implements IJwtService {
   private readonly JWT_SECRET = env.JWT_SECRET;
   private readonly JWT_EXPIRES = env.JWT_EXPIRES;
 

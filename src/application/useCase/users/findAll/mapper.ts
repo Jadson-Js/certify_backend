@@ -1,7 +1,7 @@
 import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
-import type { IFindAllUsersOutputDTO } from "../../../../infra/http/dtos/user/IFindAllUsers.js";
+import type { IFindAllOutputDTO } from "../../../../infra/http/dtos/user/IFindAll.js";
 
-export function toDTO(users: IUserEntity[]): IFindAllUsersOutputDTO[] {
+export function toDTO(users: IUserEntity[]): IFindAllOutputDTO[] {
   const mapper = users.map((user) => ({
     id: user.id,
     name: user.name,

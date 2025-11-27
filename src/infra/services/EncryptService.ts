@@ -1,7 +1,7 @@
 import { hash, compare } from "bcryptjs";
-import type { IHashService } from "../../domain/services/IHashService.js";
+import type { IEncryptService } from "../../domain/services/IEncryptService.js";
 
-export class HasherService implements IHashService {
+export class EncryptService implements IEncryptService {
   private readonly SALT_ROUNDS = 10;
 
   async hash(payload: string): Promise<string> {

@@ -1,13 +1,12 @@
-import { Router } from "express";
-import { type UserController } from "../controllers/user.controller.js";
-import { TYPES } from "../../container/types.js";
 import { inject, injectable } from "inversify";
+import { TYPES } from "../../container/types.js";
+import type { UserController } from "../controllers/user.controller.js";
+import { Router } from "express";
 import { validate } from "../middlewares/validate.js";
 import {
-  createUserSchema,
-  findUserByIdSchema,
+  createSchema,
+  findByIdSchema,
 } from "../middlewares/zod/user.schema.js";
-import passport from "passport";
 
 @injectable()
 export class UserRoutes {
@@ -19,25 +18,21 @@ export class UserRoutes {
   execute() {
     const router = Router();
 
-    router.get("/", this.userController.findAllUsers.bind(this.userController));
+    router.get("/", this.userController.findAll.bind(this.userController));
 
     router.get(
       "/:id",
-      validate(findUserByIdSchema, "params"),
-      this.userController.findUserById.bind(this.userController),
+      validate(findByIdSchema, "params"),
+      this.userController.findById.bind(this.userController),
     );
 
     router.post(
       "/",
-      validate(createUserSchema, "body"),
-      this.userController.createUser.bind(this.userController),
+      validate(createSchema, "body"),
+      this.userController.create.bind(this.userController),
     );
 
-    router.delete(
-      "/",
-      passport.authenticate("local", { session: false }),
-      this.userController.deleteAllUsers.bind(this.userController),
-    );
+    router.delete("/", this.userController.deleteAll.bind(this.userController));
 
     return router;
   }

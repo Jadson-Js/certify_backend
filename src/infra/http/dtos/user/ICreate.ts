@@ -1,10 +1,10 @@
-export interface ICreateUserInputDTO {
+export interface ICreateInputDTO {
   name: string;
   email: string;
   password: string;
 }
 
-export interface ICreateUserOutputDTO {
+export interface ICreateOutputDTO {
   id: string;
   name: string;
   email: string;
