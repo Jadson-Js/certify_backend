@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import type { IFindByIdUseCase } from "./IFindByIdUseCase.js";
-import { TYPES } from "../../../../infra/container/types.js";
+import { TYPES_USER } from "../../../../infra/container/types.js";
 import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 import type {
   IFindByIdInputDTO,
@@ -12,7 +12,7 @@ import { toDTO } from "./mapper.js";
 @injectable()
 export class FindByIdUseCase implements IFindByIdUseCase {
   constructor(
-    @inject(TYPES.IUserRepository)
+    @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
   ) {}
 

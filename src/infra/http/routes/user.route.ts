@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../container/types.js";
+import { TYPES_USER } from "../../container/types.js";
 import type { UserController } from "../controllers/user.controller.js";
 import { Router } from "express";
 import { validate } from "../middlewares/validate.js";
@@ -11,7 +11,7 @@ import {
 @injectable()
 export class UserRoutes {
   constructor(
-    @inject(TYPES.UserController)
+    @inject(TYPES_USER.UserController)
     private readonly userController: UserController,
   ) {}
 

@@ -1,25 +1,25 @@
 import { inject, injectable } from "inversify";
 import type { IFindAllUseCase } from "../../../application/useCase/users/findAll/IFindAll.js";
-import { TYPES } from "../../container/types.js";
-import type { IFindByIdUseCase } from "../../../application/useCase/users/findById/IFindByIdUseCase.js";
+import { TYPES_USER } from "../../container/types.js";
 import type { ICreateUseCase } from "../../../application/useCase/users/create/ICreateUseCase.js";
 import type { IDeleteAllUseCase } from "../../../application/useCase/users/deleteAll/IDeleteAllUsers.js";
 import { BadRequestError } from "../../../shared/error/AppError.js";
 import type { Request, Response } from "express";
+import type { IFindByIdUseCase } from "../../../application/useCase/users/findUserById/IFindByIdUseCase.js";
 
 @injectable()
 export class UserController {
   constructor(
-    @inject(TYPES.IFindAllUseCase)
+    @inject(TYPES_USER.IFindAllUseCase)
     private readonly findAllUseCase: IFindAllUseCase,
 
-    @inject(TYPES.IFindByIdUseCase)
+    @inject(TYPES_USER.IFindByIdUseCase)
     private readonly findByIdUseCase: IFindByIdUseCase,
 
-    @inject(TYPES.ICreateUseCase)
+    @inject(TYPES_USER.ICreateUseCase)
     private readonly createUseCase: ICreateUseCase,
 
-    @inject(TYPES.IDeleteAllUseCase)
+    @inject(TYPES_USER.IDeleteAllUseCase)
     private readonly deleteAllUseCase: IDeleteAllUseCase,
   ) {}
 

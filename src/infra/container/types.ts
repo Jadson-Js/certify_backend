@@ -1,4 +1,4 @@
-export const TYPES = {
+export const TYPES_USER = {
   // Repositories
   IUserRepository: Symbol.for("IUserRepository"),
 
@@ -13,4 +13,15 @@ export const TYPES = {
 
   // Routes
   UserRoutes: Symbol.for("UserRoutes"),
+};
+
+export const TYPES_AUTH = {
+  // Use Cases
+  ISignupUseCase: Symbol.for("ISignupUseCase"),
+
+  // Controllers
+  AuthController: Symbol.for("AuthController"),
+
+  // Routes
+  AuthRoutes: Symbol.for("AuthRoutes"),
 };

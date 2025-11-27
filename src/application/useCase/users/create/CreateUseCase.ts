@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import type { ICreateUseCase } from "./ICreateUseCase.js";
-import { TYPES } from "../../../../infra/container/types.js";
+import { TYPES_USER } from "../../../../infra/container/types.js";
 import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 import type {
   ICreateInputDTO,
@@ -11,7 +11,7 @@ import { toDTO } from "./mapper.js";
 @injectable()
 export class CreateUseCase implements ICreateUseCase {
   constructor(
-    @inject(TYPES.IUserRepository)
+    @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
   ) {}
 
