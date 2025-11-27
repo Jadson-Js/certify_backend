@@ -1,21 +1,32 @@
 import { inject, injectable } from "inversify";
-import { TYPES_USER } from "../../../../infra/container/types.js";
+import { TYPES_AUTH, TYPES_USER } from "../../../../infra/container/types.js";
 import type { ISignupUseCase } from "./ISignupUseCase.js";
 import type {
   ISignupInputDTO,
   ISignupOutputDTO,
 } from "../../../../infra/http/dtos/auth/ISignup.js";
 import type { ICreateUseCase } from "../../users/create/ICreateUseCase.js";
+import type { IEncryptService } from "../../../../domain/services/IEncryptService.js";
 
 @injectable()
 export class SignupUseCase implements ISignupUseCase {
   constructor(
     @inject(TYPES_USER.ICreateUseCase)
     private readonly createUseCase: ICreateUseCase,
+
+    @inject(TYPES_AUTH.IEncryptService)
+    private readonly encryptService: IEncryptService,
   ) {}
 
   async execute(params: ISignupInputDTO): Promise<ISignupOutputDTO> {
-    const user = await this.createUseCase.execute(params);
+    const { name, email, password } = params;
+    const hashPassword = await this.encryptService.hash(password);
+
+    const user = await this.createUseCase.execute({
+      name,
+      email,
+      password: hashPassword,
+    });
 
     return user;
   }

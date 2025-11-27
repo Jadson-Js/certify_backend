@@ -1,4 +1,4 @@
-import { sign, verify, type SignOptions } from "jsonwebtoken";
+import jwt, { type SignOptions } from "jsonwebtoken";
 import { env } from "../../shared/environments/const.js";
 import { InternalServerError } from "../../shared/error/AppError.js";
 import type { IJwtService } from "../../domain/services/IJwtService.js";
@@ -19,7 +19,7 @@ export class JwtService implements IJwtService {
       >,
     };
 
-    return sign(payload, this.JWT_SECRET, options);
+    return jwt.sign(payload, this.JWT_SECRET, options);
   }
 
   verify(token: string): Record<string, unknown> {
@@ -27,6 +27,6 @@ export class JwtService implements IJwtService {
       throw new InternalServerError();
     }
 
-    return verify(token, this.JWT_SECRET) as Record<string, unknown>;
+    return jwt.verify(token, this.JWT_SECRET) as Record<string, unknown>;
   }
 }

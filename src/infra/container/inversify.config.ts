@@ -10,12 +10,12 @@ import { FindByIdUseCase } from "../../application/useCase/users/findUserById/Fi
 import { SignupUseCase } from "../../application/useCase/auth/signup/SignupUseCase.js";
 import { AuthController } from "../http/controllers/auth.controller.js";
 import { AuthRoutes } from "../http/routes/auth.route.js";
+import { JwtService } from "../services/JwtService.js";
+import { EncryptService } from "../services/EncryptService.js";
 
 export const container: Container = new Container();
 
-/**
- *  USER
- */
+// USER
 // REPOSITORIES
 container
   .bind(TYPES_USER.IUserRepository)
@@ -42,10 +42,16 @@ container.bind(TYPES_USER.UserController).to(UserController).inSingletonScope();
 
 // ROUTES
 container.bind(TYPES_USER.UserRoutes).to(UserRoutes).inSingletonScope();
+// ------------------------------------------------------------------------------------------ //
 
-/**
- *  AUTH
- */
+// AUTH
+// SERVICES
+container.bind(TYPES_AUTH.IJwtService).to(JwtService).inSingletonScope();
+container
+  .bind(TYPES_AUTH.IEncryptService)
+  .to(EncryptService)
+  .inSingletonScope();
+
 // USE_CASES
 container.bind(TYPES_AUTH.ISignupUseCase).to(SignupUseCase).inSingletonScope();
 
@@ -54,3 +60,4 @@ container.bind(TYPES_AUTH.AuthController).to(AuthController).inSingletonScope();
 
 // ROUTES
 container.bind(TYPES_AUTH.AuthRoutes).to(AuthRoutes).inSingletonScope();
+// ------------------------------------------------------------------------------------------ //

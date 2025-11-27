@@ -16,6 +16,10 @@ export const TYPES_USER = {
 };
 
 export const TYPES_AUTH = {
+  // Services
+  IJwtService: Symbol.for("IJwtService"),
+  IEncryptService: Symbol.for("IEncryptService"),
+
   // Use Cases
   ISignupUseCase: Symbol.for("ISignupUseCase"),
 
