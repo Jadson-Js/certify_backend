@@ -22,6 +22,7 @@ export const TYPES_AUTH = {
 
   // Use Cases
   ISignupUseCase: Symbol.for("ISignupUseCase"),
+  ILoginUseCase: Symbol.for("ILoginUseCase"),
 
   // Controllers
   AuthController: Symbol.for("AuthController"),
