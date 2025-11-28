@@ -5,14 +5,14 @@ import type {
   ISignupInputDTO,
   ISignupOutputDTO,
 } from "../../../../infra/http/dtos/auth/ISignup.js";
-import type { ICreateUseCase } from "../../users/create/ICreateUseCase.js";
 import type { IEncryptService } from "../../../../domain/services/IEncryptService.js";
+import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 
 @injectable()
 export class SignupUseCase implements ISignupUseCase {
   constructor(
-    @inject(TYPES_USER.ICreateUseCase)
-    private readonly createUseCase: ICreateUseCase,
+    @inject(TYPES_USER.IUserRepository)
+    private readonly userRepository: IUserRepository,
 
     @inject(TYPES_AUTH.IEncryptService)
     private readonly encryptService: IEncryptService,
@@ -22,7 +22,7 @@ export class SignupUseCase implements ISignupUseCase {
     const { name, email, password } = params;
     const hashPassword = await this.encryptService.hash(password);
 
-    const user = await this.createUseCase.execute({
+    const user = await this.userRepository.create({
       name,
       email,
       password: hashPassword,

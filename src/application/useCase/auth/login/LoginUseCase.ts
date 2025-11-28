@@ -6,16 +6,19 @@ import type {
   ILoginInputDTO,
   ILoginOutputDTO,
 } from "../../../../infra/http/dtos/auth/ILogin.js";
-import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
-import { UnauthorizedError } from "../../../../shared/error/AppError.js";
+import {
+  NotFoundError,
+  UnauthorizedError,
+} from "../../../../shared/error/AppError.js";
 import type { IJwtService } from "../../../../domain/services/IJwtService.js";
 import { toDTO } from "./mapper.js";
+import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
   constructor(
-    @inject(TYPES_USER.IFindByEmailUseCase)
-    private readonly findByEmailUseCase: IFindByEmailUseCase,
+    @inject(TYPES_USER.IUserRepository)
+    private readonly userRepository: IUserRepository,
 
     @inject(TYPES_AUTH.IEncryptService)
     private readonly encryptService: IEncryptService,
@@ -27,7 +30,11 @@ export class LoginUseCase implements ILoginUseCase {
   async execute(params: ILoginInputDTO): Promise<ILoginOutputDTO> {
     const { email, password } = params;
 
-    const user: IUserEntity = await this.findByEmailUseCase.execute({ email });
+    const user = await this.userRepository.findByEmail({ email });
+
+    if (!user) {
+      throw new NotFoundError(`User not found by email: ${email}`);
+    }
 
     const validPassword = await this.encryptService.compare(
       password,
