@@ -7,6 +7,7 @@ import { UserRoutes } from "../../http/routes/user.route.js";
 import { FindByIdUseCase } from "../../../application/useCase/users/findUserById/FindByIdUseCase.js";
 import { TYPES_USER } from "../types.js";
 import { ContainerModule } from "inversify";
+import { FindByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/FindByEmailUseCase.js";
 
 export const userModule = new ContainerModule((container) => {
   // REPOSITORIES
@@ -23,6 +24,10 @@ export const userModule = new ContainerModule((container) => {
   container
     .bind(TYPES_USER.IFindByIdUseCase)
     .to(FindByIdUseCase)
+    .inSingletonScope();
+  container
+    .bind(TYPES_USER.IFindByEmailUseCase)
+    .to(FindByEmailUseCase)
     .inSingletonScope();
   container
     .bind(TYPES_USER.ICreateUseCase)

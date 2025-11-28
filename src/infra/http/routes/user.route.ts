@@ -5,6 +5,7 @@ import { Router } from "express";
 import { validate } from "../middlewares/validate.js";
 import {
   createSchema,
+  findByEmailSchema,
   findByIdSchema,
 } from "../middlewares/zod/user.schema.js";
 
@@ -21,9 +22,15 @@ export class UserRoutes {
     router.get("/", this.userController.findAll.bind(this.userController));
 
     router.get(
-      "/:id",
+      "/id/:id",
       validate(findByIdSchema, "params"),
       this.userController.findById.bind(this.userController),
+    );
+
+    router.get(
+      "/email/:email",
+      validate(findByEmailSchema, "params"),
+      this.userController.findByEmail.bind(this.userController),
     );
 
     router.post(

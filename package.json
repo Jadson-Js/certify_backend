@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "tsx --watch src/main.ts"
+    "start": "clear && tsx --watch src/main.ts"
   },
   "keywords": [],
   "author": "",

@@ -6,6 +6,7 @@ import type { IDeleteAllUseCase } from "../../../application/useCase/users/delet
 import { BadRequestError } from "../../../shared/error/AppError.js";
 import type { Request, Response } from "express";
 import type { IFindByIdUseCase } from "../../../application/useCase/users/findUserById/IFindByIdUseCase.js";
+import type { IFindByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/IFindByEmailUseCase.js";
 
 @injectable()
 export class UserController {
@@ -15,6 +16,9 @@ export class UserController {
 
     @inject(TYPES_USER.IFindByIdUseCase)
     private readonly findByIdUseCase: IFindByIdUseCase,
+
+    @inject(TYPES_USER.IFindByEmailUseCase)
+    private readonly findByEmailUseCase: IFindByEmailUseCase,
 
     @inject(TYPES_USER.ICreateUseCase)
     private readonly createUseCase: ICreateUseCase,
@@ -42,6 +46,22 @@ export class UserController {
       }
 
       const response = await this.findByIdUseCase.execute({ id });
+      return res.status(200).json(response);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async findByEmail(req: Request, res: Response) {
+    try {
+      const email = req.params.email;
+
+      if (!email) {
+        throw new BadRequestError();
+      }
+
+      const response = await this.findByEmailUseCase.execute({ email });
       return res.status(200).json(response);
     } catch (error) {
       console.error(error);
