@@ -7,6 +7,7 @@ import { BadRequestError } from "../../../shared/error/AppError.js";
 import type { Request, Response } from "express";
 import type { IFindByIdUseCase } from "../../../application/useCase/users/findUserById/IFindByIdUseCase.js";
 import type { IFindByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/IFindByEmailUseCase.js";
+import { ok } from "../../../shared/utils/helper.js";
 
 @injectable()
 export class UserController {
@@ -28,45 +29,27 @@ export class UserController {
   ) {}
 
   async findAll(req: Request, res: Response) {
-    try {
-      const response = await this.findAllUseCase.execute();
-      return res.status(200).json(response);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
+    const response = await this.findAllUseCase.execute();
+
+    return ok(res, 200, "User found successfully", response);
   }
 
   async findById(req: Request, res: Response) {
-    try {
-      const id = req.params.id;
+    const id = req.params.id;
 
-      if (!id) {
-        throw new BadRequestError();
-      }
+    if (!id) throw new BadRequestError();
 
-      const response = await this.findByIdUseCase.execute({ id });
-      return res.status(200).json(response);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
+    const response = await this.findByIdUseCase.execute({ id });
+    return ok(res, 200, "User found successfully", response);
   }
 
   async findByEmail(req: Request, res: Response) {
-    try {
-      const email = req.params.email;
+    const email = req.params.email;
 
-      if (!email) {
-        throw new BadRequestError();
-      }
+    if (!email) throw new BadRequestError("Email params is required");
 
-      const response = await this.findByEmailUseCase.execute({ email });
-      return res.status(200).json(response);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
+    const response = await this.findByEmailUseCase.execute({ email });
+    return ok(res, 200, "User found successfully", response);
   }
 
   async create(req: Request, res: Response) {
@@ -80,12 +63,12 @@ export class UserController {
 
     const response = await this.createUseCase.execute(input);
 
-    return res.status(201).json(response);
+    return ok(res, 201, "User created successfully", response);
   }
 
   async deleteAll(req: Request, res: Response) {
     await this.deleteAllUseCase.execute();
 
-    return res.status(200).json();
+    return ok(res, 204);
   }
 }

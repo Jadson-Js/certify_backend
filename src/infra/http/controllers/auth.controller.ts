@@ -3,6 +3,7 @@ import { TYPES_AUTH } from "../../container/types.js";
 import type { Request, Response } from "express";
 import type { ISignupUseCase } from "../../../application/useCase/auth/signup/ISignupUseCase.js";
 import type { ILoginUseCase } from "../../../application/useCase/auth/login/ILoginUseCase.js";
+import { ok } from "../../../shared/utils/helper.js";
 
 @injectable()
 export class AuthController {
@@ -25,7 +26,7 @@ export class AuthController {
 
     const response = await this.signupUseCase.execute(input);
 
-    return res.status(201).json(response);
+    return ok(res, 201, "Signup successfully", response);
   }
 
   async login(req: Request, res: Response) {
@@ -38,6 +39,6 @@ export class AuthController {
 
     const response = await this.loginUseCase.execute(input);
 
-    return res.status(200).json(response);
+    return ok(res, 200, "Login successfully", response);
   }
 }
