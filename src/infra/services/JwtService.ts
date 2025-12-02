@@ -1,5 +1,5 @@
 import jwt, { type SignOptions } from "jsonwebtoken";
-import { env } from "../../shared/environments/const.js";
+import { env } from "../../shared/environments/constants.js";
 import { InternalServerError } from "../../shared/error/AppError.js";
 import type { IJwtService } from "../../domain/services/IJwtService.js";
 

@@ -1,11 +1,10 @@
 import { injectable } from "inversify";
 import { type IUserEntity } from "../../../../domain/entities/user.entity.js";
 import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
-import { PrismaClient } from "../../../../../generated/prisma/client.js";
 import type { IFindByIdInputDTO } from "../../../http/dtos/user/IFindById.js";
 import type { ICreateInputDTO } from "../../../http/dtos/user/ICreate.js";
 import type { IFindByEmailInputDTO } from "../../../http/dtos/user/IFindByEmail.js";
-const prisma = new PrismaClient();
+import { prisma } from "../../../../../prisma/prisma.js";
 
 @injectable()
 export class UserRepositoryPostgres implements IUserRepository {
