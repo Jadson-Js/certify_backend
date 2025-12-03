@@ -1,30 +1,21 @@
 import type { NextFunction, Request, Response } from "express";
-import passport from "passport";
-import type { IUserEntity } from "../../../domain/entities/user.entity.js";
+import { UnauthorizedError } from "../../../shared/error/AppError.js";
+import { JwtService } from "../../services/JwtService.js";
 
-export const ensureAuthenticated = (
+export function ensureAuthenticated(
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
-  passport.authenticate(
-    "jwt",
-    { session: false },
-    (err: Error, user: IUserEntity, info: unknown) => {
-      if (err) {
-        return next(err);
-      }
+) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) throw new UnauthorizedError("Missing authorization header");
 
-      if (!user) {
-        console.log(info);
-        return res.status(401).json({
-          status: "error",
-          message: "Unauthorized: Invalid or expired token",
-        });
-      }
+  const token = authHeader.split(" ")[1];
+  if (!token) throw new UnauthorizedError("Missing authorization header");
 
-      req.user = user;
-      return next();
-    },
-  )(req, res, next);
-};
+  const jwtService = new JwtService();
+  const decoded = jwtService.verify(token);
+
+  req.user = { id: decoded.id as string };
+  next();
+}

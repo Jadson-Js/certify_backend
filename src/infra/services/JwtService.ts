@@ -1,6 +1,9 @@
 import jwt, { type SignOptions } from "jsonwebtoken";
 import { env } from "../../shared/environments/constants.js";
-import { InternalServerError } from "../../shared/error/AppError.js";
+import {
+  InternalServerError,
+  UnauthorizedError,
+} from "../../shared/error/AppError.js";
 import type { IJwtService } from "../../domain/services/IJwtService.js";
 
 export class JwtService implements IJwtService {
@@ -27,6 +30,12 @@ export class JwtService implements IJwtService {
       throw new InternalServerError();
     }
 
-    return jwt.verify(token, this.JWT_SECRET) as Record<string, unknown>;
+    try {
+      // Tenta verificar. Se o token estiver errado/expirado, vai pular pro catch
+      return jwt.verify(token, this.JWT_SECRET) as Record<string, unknown>;
+    } catch (err) {
+      console.log(err);
+      throw new UnauthorizedError("Invalid or expired token");
+    }
   }
 }

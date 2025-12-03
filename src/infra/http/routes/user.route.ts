@@ -8,6 +8,7 @@ import {
   findByEmailSchema,
   findByIdSchema,
 } from "../middlewares/zod/user.schema.js";
+import { ensureAuthenticated } from "../middlewares/ensureAuthentticated.js";
 
 @injectable()
 export class UserRoutes {
@@ -19,7 +20,11 @@ export class UserRoutes {
   execute() {
     const router = Router();
 
-    router.get("/", this.userController.findAll.bind(this.userController));
+    router.get(
+      "/",
+      ensureAuthenticated,
+      this.userController.findAll.bind(this.userController),
+    );
 
     router.get(
       "/id/:id",
