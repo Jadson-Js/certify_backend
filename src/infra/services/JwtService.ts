@@ -12,7 +12,7 @@ export class JwtService implements IJwtService {
 
   generate(payload: { id: string }): string {
     if (!this.JWT_SECRET || !this.JWT_EXPIRES) {
-      throw new InternalServerError();
+      throw new InternalServerError("JWT configuration is missing");
     }
 
     const options: SignOptions = {
@@ -27,7 +27,7 @@ export class JwtService implements IJwtService {
 
   verify(token: string): Record<string, unknown> {
     if (!this.JWT_SECRET || !this.JWT_EXPIRES) {
-      throw new InternalServerError();
+      throw new InternalServerError("JWT configuration is missing");
     }
 
     try {

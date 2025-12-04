@@ -38,7 +38,7 @@ export class LoginUseCase implements ILoginUseCase {
 
     const validPassword = await this.encryptService.compare(
       password,
-      user.password,
+      user.password_hash,
     );
 
     if (!validPassword) {

@@ -29,7 +29,11 @@ export class UserRepositoryPostgres implements IUserRepository {
   }
 
   async create(params: ICreateInputDTO): Promise<IUserEntity> {
-    const user: IUserEntity = await prisma.user.create({ data: params });
+    const { name, email, password } = params;
+
+    const user = await prisma.user.create({
+      data: { name, email, password_hash: password },
+    });
 
     return user;
   }
