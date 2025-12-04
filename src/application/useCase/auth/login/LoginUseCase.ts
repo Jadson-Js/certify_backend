@@ -45,8 +45,18 @@ export class LoginUseCase implements ILoginUseCase {
       throw new UnauthorizedError("Invalid credentials");
     }
 
-    const accessToken = this.jwtService.generate({ id: user.id });
+    const accessToken = this.jwtService.generateAccessToken({ user_id: user.id });
 
-    return toDTO(user, accessToken);
+    // authSession = useCase vai criar um auth_session
+  
+    // const refreshToken = this.jwtService.generateRefreshToken({ auth_session_id: authSession.id });
+
+    // refreshTokenHash  = hash para encriptografar o refreshToken
+
+    // authSession.refresh_token_hash
+
+    // repository para criar auth_session enviando o authSession
+
+    return toDTO(user, accessToken, "refreshToken");
   }
 }
