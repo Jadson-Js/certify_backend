@@ -47,7 +47,7 @@ export class LoginUseCase implements ILoginUseCase {
 
     const accessToken = this.jwtService.generateAccessToken({ user_id: user.id });
 
-    // authSession = useCase vai criar um auth_session
+    const authSession = 
   
     // const refreshToken = this.jwtService.generateRefreshToken({ auth_session_id: authSession.id });
 
