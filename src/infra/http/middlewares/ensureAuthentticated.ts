@@ -14,7 +14,7 @@ export function ensureAuthenticated(
   if (!token) throw new UnauthorizedError("Missing authorization header");
 
   const jwtService = new JwtService();
-  const decoded = jwtService.verify(token);
+  const decoded = jwtService.verifyAccess(token);
 
   req.user = { id: decoded.id as string };
   next();

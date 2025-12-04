@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+import { randomUUID } from 'crypto';
 import type { ILoginUseCase } from "./ILoginUseCase.js";
 import { TYPES_AUTH, TYPES_USER } from "../../../../infra/container/types.js";
 import type { IEncryptService } from "../../../../domain/services/IEncryptService.js";
@@ -13,6 +14,7 @@ import {
 import type { IJwtService } from "../../../../domain/services/IJwtService.js";
 import { toDTO } from "./mapper.js";
 import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
+import type { IAuthSessionEntity } from "../../../../domain/entities/authSession.entity.js";
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
@@ -41,22 +43,22 @@ export class LoginUseCase implements ILoginUseCase {
       user.password_hash,
     );
 
+    // Validar se o user está com verified_at diferente de NULL
+
     if (!validPassword) {
       throw new UnauthorizedError("Invalid credentials");
     }
 
+    const authSessionTmp: IAuthSessionEntity = {id: randomUUID(), user_id: user.id, refresh_token_hash: "xxx", expires_at: new Date(), revoked_at: null, created_at: new Date(), updated_at: new Date()}
+
     const accessToken = this.jwtService.generateAccessToken({ user_id: user.id });
+    const refreshToken = this.jwtService.generateRefreshToken({ auth_session_id: authSessionTmp.id });
 
-    const authSession = 
-  
-    // const refreshToken = this.jwtService.generateRefreshToken({ auth_session_id: authSession.id });
+    authSessionTmp.refresh_token_hash = await this.encryptService.hash(refreshToken.token)
+    authSessionTmp.expires_at = refreshToken.expires_at
 
-    // refreshTokenHash  = hash para encriptografar o refreshToken
+    // useServices para criar AuthSession
 
-    // authSession.refresh_token_hash
-
-    // repository para criar auth_session enviando o authSession
-
-    return toDTO(user, accessToken, "refreshToken");
+    return toDTO(user, accessToken, refreshToken.token);
   }
 }
