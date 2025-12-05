@@ -1,7 +1,11 @@
 import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
 import type { ILoginOutputDTO } from "../../../../infra/http/dtos/auth/ILogin.js";
 
-export function toDTO(user: IUserEntity, accessToken: string, refresh_token: string): ILoginOutputDTO {
+export function toDTO(
+  user: IUserEntity,
+  accessToken: string,
+  refresh_token: string,
+): ILoginOutputDTO {
   const mapper = {
     id: user.id,
     name: user.name,
@@ -10,7 +14,7 @@ export function toDTO(user: IUserEntity, accessToken: string, refresh_token: str
     created_at: user.created_at,
     updated_at: user.updated_at,
     access_token: accessToken,
-    refresh_token: refresh_token
+    refresh_token: refresh_token,
   };
 
   return mapper;

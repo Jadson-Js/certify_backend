@@ -11,12 +11,12 @@ export interface IAuthSessionEntity {
 export class AuthSessionEntity implements IAuthSessionEntity {
   constructor(
     private readonly _id: string,
-  private readonly _user_id: string,
-  private readonly _refresh_token_hash: string,
-  private readonly _expires_at: Date,
-  private readonly _revoked_at:  Date | null,
-  private readonly _created_at: Date,
-  private readonly _updated_at: Date,
+    private readonly _user_id: string,
+    private readonly _refresh_token_hash: string,
+    private readonly _expires_at: Date,
+    private readonly _revoked_at: Date | null,
+    private readonly _created_at: Date,
+    private readonly _updated_at: Date,
   ) {}
 
   get id(): string {

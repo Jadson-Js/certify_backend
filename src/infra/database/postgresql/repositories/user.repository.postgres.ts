@@ -20,7 +20,9 @@ export class UserRepositoryPostgres implements IUserRepository {
     return user;
   }
 
-  async findByEmail(params: IFindUserByEmailInputDTO): Promise<IUserEntity | null> {
+  async findByEmail(
+    params: IFindUserByEmailInputDTO,
+  ): Promise<IUserEntity | null> {
     const user = await prisma.user.findUnique({
       where: { email: params.email },
     });

@@ -2,7 +2,10 @@ import { inject, injectable } from "inversify";
 import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
 import type { ICreateUserUseCase } from "./ICreateUseCase.js";
 import { TYPES_USER } from "../../../../infra/container/types.js";
-import type { ICreateUserInputDTO, ICreateUserOutputDTO } from "../../../../infra/http/dtos/user/ICreate.js";
+import type {
+  ICreateUserInputDTO,
+  ICreateUserOutputDTO,
+} from "../../../../infra/http/dtos/user/ICreate.js";
 import { toDTO } from "./mapper.js";
 
 @injectable()
