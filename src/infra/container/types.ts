@@ -31,3 +31,11 @@ export const TYPES_AUTH = {
   // Routes
   AuthRoutes: Symbol.for("AuthRoutes"),
 };
+
+export const TYPES_AUTH_SESSION = {
+  // Repositories
+  IAuthSessionRepository: Symbol.for("IAuthSessionRepository"),
+
+  // Use Cases
+  ICreateAuthSessionUseCase: Symbol.for("ICreateAuthSessionUseCase"),
+};
