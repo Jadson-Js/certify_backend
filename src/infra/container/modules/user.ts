@@ -1,13 +1,13 @@
+import { ContainerModule } from "inversify";
+import { CreateUserUseCase } from "../../../application/useCase/users/create/CreateUseCase.js";
+import { DeleteAllUsersUseCase } from "../../../application/useCase/users/deleteAll/DeleteAllUsersUseCase.js";
+import { FindAllUsersUseCase } from "../../../application/useCase/users/findAll/FindAllUseCase.js";
+import { FindUserByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/FindByEmailUseCase.js";
+import { FindUserByIdUseCase } from "../../../application/useCase/users/findUserById/FindByIdUseCase.js";
 import { UserRepositoryPostgres } from "../../database/postgresql/repositories/user.repository.postgres.js";
-import { FindAllUseCase } from "../../../application/useCase/users/findAll/FindAllUseCase.js";
-import { CreateUseCase } from "../../../application/useCase/users/create/CreateUseCase.js";
-import { DeleteAllUseCase } from "../../../application/useCase/users/deleteAll/DeleteAllUsersUseCase.js";
 import { UserController } from "../../http/controllers/user.controller.js";
 import { UserRoutes } from "../../http/routes/user.route.js";
-import { FindByIdUseCase } from "../../../application/useCase/users/findUserById/FindByIdUseCase.js";
 import { TYPES_USER } from "../types.js";
-import { ContainerModule } from "inversify";
-import { FindByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/FindByEmailUseCase.js";
 
 export const userModule = new ContainerModule((container) => {
   // REPOSITORIES
@@ -18,24 +18,24 @@ export const userModule = new ContainerModule((container) => {
 
   // USE_CASES
   container
-    .bind(TYPES_USER.IFindAllUseCase)
-    .to(FindAllUseCase)
+    .bind(TYPES_USER.IFindAllUsersUseCase)
+    .to(FindAllUsersUseCase)
     .inSingletonScope();
   container
-    .bind(TYPES_USER.IFindByIdUseCase)
-    .to(FindByIdUseCase)
+    .bind(TYPES_USER.IFindUserByIdUseCase)
+    .to(FindUserByIdUseCase)
     .inSingletonScope();
   container
-    .bind(TYPES_USER.IFindByEmailUseCase)
-    .to(FindByEmailUseCase)
+    .bind(TYPES_USER.IFindUserByEmailUseCase)
+    .to(FindUserByEmailUseCase)
     .inSingletonScope();
   container
-    .bind(TYPES_USER.ICreateUseCase)
-    .to(CreateUseCase)
+    .bind(TYPES_USER.ICreateUserUseCase)
+    .to(CreateUserUseCase)
     .inSingletonScope();
   container
-    .bind(TYPES_USER.IDeleteAllUseCase)
-    .to(DeleteAllUseCase)
+    .bind(TYPES_USER.IDeleteAllUsersUseCase)
+    .to(DeleteAllUsersUseCase)
     .inSingletonScope();
 
   // CONTROLLERS

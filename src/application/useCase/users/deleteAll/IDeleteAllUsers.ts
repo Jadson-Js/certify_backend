@@ -1,3 +1,3 @@
-export interface IDeleteAllUseCase {
+export interface IDeleteAllUsersUseCase {
   execute(): Promise<null>;
 }

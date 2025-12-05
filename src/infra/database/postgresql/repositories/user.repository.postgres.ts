@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { type IUserEntity } from "../../../../domain/entities/user.entity.js";
+import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
 import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
-import type { IFindByIdInputDTO } from "../../../http/dtos/user/IFindById.js";
-import type { ICreateInputDTO } from "../../../http/dtos/user/ICreate.js";
-import type { IFindByEmailInputDTO } from "../../../http/dtos/user/IFindByEmail.js";
 import { prisma } from "../../../../../prisma/prisma.js";
+import type { IFindUserByIdInputDTO } from "../../../http/dtos/user/IFindById.js";
+import type { IFindUserByEmailInputDTO } from "../../../http/dtos/user/IFindByEmail.js";
+import type { ICreateUserInputDTO } from "../../../http/dtos/user/ICreate.js";
 
 @injectable()
 export class UserRepositoryPostgres implements IUserRepository {
@@ -14,13 +14,13 @@ export class UserRepositoryPostgres implements IUserRepository {
     return users;
   }
 
-  async findById(params: IFindByIdInputDTO): Promise<IUserEntity | null> {
+  async findById(params: IFindUserByIdInputDTO): Promise<IUserEntity | null> {
     const user = await prisma.user.findUnique({ where: { id: params.id } });
 
     return user;
   }
 
-  async findByEmail(params: IFindByEmailInputDTO): Promise<IUserEntity | null> {
+  async findByEmail(params: IFindUserByEmailInputDTO): Promise<IUserEntity | null> {
     const user = await prisma.user.findUnique({
       where: { email: params.email },
     });
@@ -28,7 +28,7 @@ export class UserRepositoryPostgres implements IUserRepository {
     return user;
   }
 
-  async create(params: ICreateInputDTO): Promise<IUserEntity> {
+  async create(params: ICreateUserInputDTO): Promise<IUserEntity> {
     const { name, email, password } = params;
 
     const user = await prisma.user.create({

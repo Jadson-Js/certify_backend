@@ -1,9 +1,10 @@
 import { inject, injectable } from "inversify";
 import { TYPES_AUTH } from "../../container/types.js";
-import type { Request, Response } from "express";
 import type { ISignupUseCase } from "../../../application/useCase/auth/signup/ISignupUseCase.js";
 import type { ILoginUseCase } from "../../../application/useCase/auth/login/ILoginUseCase.js";
+import type { Request, Response } from "express";
 import { ok } from "../../../shared/utils/helper.js";
+
 
 @injectable()
 export class AuthController {

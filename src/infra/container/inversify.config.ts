@@ -1,7 +1,7 @@
 import { Container } from "inversify";
-import { userModule } from "./modules/user.js";
 import { authModule } from "./modules/auth.js";
 import { authSessionModule } from "./modules/authSession.js";
+import { userModule } from "./modules/user.js";
 
 const container = new Container();
 

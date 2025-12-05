@@ -1,4 +1,4 @@
-export interface IFindAllOutputDTO {
+export interface IFindAllUsersOutputDTO {
   id: string;
   name: string;
   email: string;

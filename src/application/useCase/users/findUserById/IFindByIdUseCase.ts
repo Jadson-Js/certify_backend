@@ -1,8 +1,5 @@
-import type {
-  IFindByIdInputDTO,
-  IFindByIdOutputDTO,
-} from "../../../../infra/http/dtos/user/IFindById.js";
+import type { IFindUserByIdInputDTO, IFindUserByIdOutputDTO } from "../../../../infra/http/dtos/user/IFindById.js";
 
-export interface IFindByIdUseCase {
-  execute(params: IFindByIdInputDTO): Promise<IFindByIdOutputDTO>;
+export interface IFindUserByIdUseCase {
+  execute(params: IFindUserByIdInputDTO): Promise<IFindUserByIdOutputDTO>;
 }

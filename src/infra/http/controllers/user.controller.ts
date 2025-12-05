@@ -1,31 +1,31 @@
 import { inject, injectable } from "inversify";
-import type { IFindAllUseCase } from "../../../application/useCase/users/findAll/IFindAll.js";
-import { TYPES_USER } from "../../container/types.js";
-import type { ICreateUseCase } from "../../../application/useCase/users/create/ICreateUseCase.js";
-import type { IDeleteAllUseCase } from "../../../application/useCase/users/deleteAll/IDeleteAllUsers.js";
-import { BadRequestError } from "../../../shared/error/AppError.js";
-import type { Request, Response } from "express";
-import type { IFindByIdUseCase } from "../../../application/useCase/users/findUserById/IFindByIdUseCase.js";
-import type { IFindByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/IFindByEmailUseCase.js";
 import { ok } from "../../../shared/utils/helper.js";
+import { TYPES_USER } from "../../container/types.js";
+import type { IFindAllUsersUseCase } from "../../../application/useCase/users/findAll/IFindAll.js";
+import type { IFindUserByIdUseCase } from "../../../application/useCase/users/findUserById/IFindByIdUseCase.js";
+import type { IFindUserByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/IFindByEmailUseCase.js";
+import type { ICreateUserUseCase } from "../../../application/useCase/users/create/ICreateUseCase.js";
+import type { IDeleteAllUsersUseCase } from "../../../application/useCase/users/deleteAll/IDeleteAllUsers.js";
+import type { Request, Response } from "express";
+import { BadRequestError } from "../../../shared/error/AppError.js";
 
 @injectable()
 export class UserController {
   constructor(
-    @inject(TYPES_USER.IFindAllUseCase)
-    private readonly findAllUseCase: IFindAllUseCase,
+    @inject(TYPES_USER.IFindAllUsersUseCase)
+    private readonly findAllUseCase: IFindAllUsersUseCase,
 
-    @inject(TYPES_USER.IFindByIdUseCase)
-    private readonly findByIdUseCase: IFindByIdUseCase,
+    @inject(TYPES_USER.IFindUserByIdUseCase)
+    private readonly findByIdUseCase: IFindUserByIdUseCase,
 
-    @inject(TYPES_USER.IFindByEmailUseCase)
-    private readonly findByEmailUseCase: IFindByEmailUseCase,
+    @inject(TYPES_USER.IFindUserByEmailUseCase)
+    private readonly findByEmailUseCase: IFindUserByEmailUseCase,
 
-    @inject(TYPES_USER.ICreateUseCase)
-    private readonly createUseCase: ICreateUseCase,
+    @inject(TYPES_USER.ICreateUserUseCase)
+    private readonly createUseCase: ICreateUserUseCase,
 
-    @inject(TYPES_USER.IDeleteAllUseCase)
-    private readonly deleteAllUseCase: IDeleteAllUseCase,
+    @inject(TYPES_USER.IDeleteAllUsersUseCase)
+    private readonly deleteAllUseCase: IDeleteAllUsersUseCase,
   ) {}
 
   async findAll(req: Request, res: Response) {

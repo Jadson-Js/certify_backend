@@ -1,22 +1,19 @@
 import { inject, injectable } from "inversify";
-import type { IFindByIdUseCase } from "./IFindByIdUseCase.js";
+import type { IFindUserByIdUseCase } from "./IFindByIdUseCase.js";
 import { TYPES_USER } from "../../../../infra/container/types.js";
 import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
-import type {
-  IFindByIdInputDTO,
-  IFindByIdOutputDTO,
-} from "../../../../infra/http/dtos/user/IFindById.js";
+import type { IFindUserByIdInputDTO, IFindUserByIdOutputDTO } from "../../../../infra/http/dtos/user/IFindById.js";
 import { NotFoundError } from "../../../../shared/error/AppError.js";
 import { toDTO } from "./mapper.js";
 
 @injectable()
-export class FindByIdUseCase implements IFindByIdUseCase {
+export class FindUserByIdUseCase implements IFindUserByIdUseCase {
   constructor(
     @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(params: IFindByIdInputDTO): Promise<IFindByIdOutputDTO> {
+  async execute(params: IFindUserByIdInputDTO): Promise<IFindUserByIdOutputDTO> {
     const users = await this.userRepository.findById(params);
 
     if (!users) {

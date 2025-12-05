@@ -1,5 +1,5 @@
-import type { IFindAllOutputDTO } from "../../../../infra/http/dtos/user/IFindAll.js";
+import type { IFindAllUsersOutputDTO } from "../../../../infra/http/dtos/user/IFindAll.js";
 
-export interface IFindAllUseCase {
-  execute(): Promise<IFindAllOutputDTO[]>;
+export interface IFindAllUsersUseCase {
+  execute(): Promise<IFindAllUsersOutputDTO[]>;
 }

@@ -3,11 +3,11 @@ export const TYPES_USER = {
   IUserRepository: Symbol.for("IUserRepository"),
 
   // Use Cases
-  IFindAllUseCase: Symbol.for("IFindAllUseCase"),
-  IFindByIdUseCase: Symbol.for("IFindByIdUseCase"),
-  IFindByEmailUseCase: Symbol.for("IFindByEmailUseCase"),
-  ICreateUseCase: Symbol.for("ICreateUseCase"),
-  IDeleteAllUseCase: Symbol.for("IDeleteAllUseCase"),
+  IFindAllUsersUseCase: Symbol.for("IFindAllUsersUseCase"),
+  IFindUserByIdUseCase: Symbol.for("IFindUserByIdUseCase"),
+  IFindUserByEmailUseCase: Symbol.for("IFindUserByEmailUseCase"),
+  ICreateUserUseCase: Symbol.for("ICreateUserUseCase"),
+  IDeleteAllUsersUseCase: Symbol.for("IDeleteAllUsersUseCase"),
 
   // Controllers
   UserController: Symbol.for("UserController"),
