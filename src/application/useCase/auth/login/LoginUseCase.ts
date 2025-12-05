@@ -103,9 +103,8 @@ export class LoginUseCase implements ILoginUseCase {
     refreshToken: { token: string; expires_at: Date },
   ): Promise<null> {
     const refreshTokenHashed = await this.encryptService.hash(
-          refreshToken.token,
+      refreshToken.token,
     );
-      
     data.refresh_token_hash = refreshTokenHashed;
     data.expires_at = refreshToken.expires_at;
 
