@@ -11,7 +11,6 @@ export class JwtService implements IJwtService {
   private readonly JWT_ACCESS_EXPIRES = env.JWT_ACCESS_EXPIRES;
   private readonly JWT_REFRESH_SECRET = env.JWT_REFRESH_SECRET;
   private readonly JWT_REFRESH_EXPIRES = env.JWT_REFRESH_EXPIRES;
-  
 
   generateAccessToken(payload: { user_id: string }): string {
     if (!this.JWT_ACCESS_SECRET || !this.JWT_ACCESS_EXPIRES) {
@@ -28,7 +27,10 @@ export class JwtService implements IJwtService {
     return jwt.sign(payload, this.JWT_ACCESS_SECRET, options);
   }
 
-  generateRefreshToken(payload: { auth_session_id: string }): {token: string, expires_at: Date} {
+  generateRefreshToken(payload: { auth_session_id: string }): {
+    token: string;
+    expires_at: Date;
+  } {
     if (!this.JWT_REFRESH_SECRET || !this.JWT_REFRESH_EXPIRES) {
       throw new InternalServerError("JWT configuration is missing");
     }
@@ -42,11 +44,11 @@ export class JwtService implements IJwtService {
 
     const token = jwt.sign(payload, this.JWT_REFRESH_SECRET, options);
 
-    const decoded = jwt.decode(token) as {exp: number}
+    const decoded = jwt.decode(token) as { exp: number };
 
-    const expires_at = new Date(decoded.exp * 1000)
+    const expires_at = new Date(decoded.exp * 1000);
 
-    return {token, expires_at}
+    return { token, expires_at };
   }
 
   verifyAccess(accessToken: string): Record<string, unknown> {
@@ -56,7 +58,10 @@ export class JwtService implements IJwtService {
 
     try {
       // Tenta verificar. Se o token estiver errado/expirado, vai pular pro catch
-      return jwt.verify(accessToken, this.JWT_ACCESS_SECRET) as Record<string, unknown>;
+      return jwt.verify(accessToken, this.JWT_ACCESS_SECRET) as Record<
+        string,
+        unknown
+      >;
     } catch (err) {
       console.log(err);
       throw new UnauthorizedError("Invalid or expired token");
@@ -70,7 +75,10 @@ export class JwtService implements IJwtService {
 
     try {
       // Tenta verificar. Se o token estiver errado/expirado, vai pular pro catch
-      return jwt.verify(refreshToken, this.JWT_REFRESH_SECRET) as Record<string, unknown>;
+      return jwt.verify(refreshToken, this.JWT_REFRESH_SECRET) as Record<
+        string,
+        unknown
+      >;
     } catch (err) {
       console.log(err);
       throw new UnauthorizedError("Invalid or expired token");

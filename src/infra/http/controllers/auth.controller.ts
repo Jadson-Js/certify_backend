@@ -5,7 +5,6 @@ import type { ILoginUseCase } from "../../../application/useCase/auth/login/ILog
 import type { Request, Response } from "express";
 import { ok } from "../../../shared/utils/helper.js";
 
-
 @injectable()
 export class AuthController {
   constructor(

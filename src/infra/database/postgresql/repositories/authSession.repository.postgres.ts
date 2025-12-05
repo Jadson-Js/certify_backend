@@ -6,8 +6,9 @@ import { prisma } from "../../../../../prisma/prisma.js";
 
 @injectable()
 export class authSessionRepositoryPostgres implements IAuthSessionRepository {
-  async create(params: ICreateAuthSessionInputDTO): Promise<IAuthSessionEntity> {
-
+  async create(
+    params: ICreateAuthSessionInputDTO,
+  ): Promise<IAuthSessionEntity> {
     const authSession = await prisma.authSession.create({
       data: params,
     });

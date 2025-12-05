@@ -3,7 +3,11 @@ import { TYPES_USER } from "../../container/types.js";
 import type { UserController } from "../controllers/user.controller.js";
 import { Router } from "express";
 import { ensureAuthenticated } from "../middlewares/ensureAuthentticated.js";
-import { createUserSchema, findUserByEmailSchema, findUserByIdSchema } from "../middlewares/zod/user.schema.js";
+import {
+  createUserSchema,
+  findUserByEmailSchema,
+  findUserByIdSchema,
+} from "../middlewares/zod/user.schema.js";
 import { validate } from "../middlewares/validate.js";
 
 @injectable()
