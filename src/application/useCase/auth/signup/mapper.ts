@@ -1,5 +1,5 @@
-import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
-import type { ISignupOutputDTO } from "../../../../infra/http/dtos/auth/ISignup.js";
+import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
+import type { ISignupOutputDTO } from '../../../../infra/api/dtos/auth/ISignup.js';
 
 export function toDTO(user: IUserEntity): ISignupOutputDTO {
   const mapper = {

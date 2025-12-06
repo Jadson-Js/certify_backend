@@ -1,13 +1,13 @@
-import { ContainerModule } from "inversify";
-import { CreateUserUseCase } from "../../../application/useCase/users/create/CreateUseCase.js";
-import { DeleteAllUsersUseCase } from "../../../application/useCase/users/deleteAll/DeleteAllUsersUseCase.js";
-import { FindAllUsersUseCase } from "../../../application/useCase/users/findAll/FindAllUseCase.js";
-import { FindUserByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/FindByEmailUseCase.js";
-import { FindUserByIdUseCase } from "../../../application/useCase/users/findUserById/FindByIdUseCase.js";
-import { UserRepositoryPostgres } from "../../database/postgresql/repositories/user.repository.postgres.js";
-import { UserController } from "../../http/controllers/user.controller.js";
-import { UserRoutes } from "../../http/routes/user.route.js";
-import { TYPES_USER } from "../types.js";
+import { ContainerModule } from 'inversify';
+import { CreateUserUseCase } from '../../../application/useCase/users/create/CreateUseCase.js';
+import { DeleteAllUsersUseCase } from '../../../application/useCase/users/deleteAll/DeleteAllUsersUseCase.js';
+import { FindAllUsersUseCase } from '../../../application/useCase/users/findAll/FindAllUseCase.js';
+import { FindUserByEmailUseCase } from '../../../application/useCase/users/findUserByEmail/FindByEmailUseCase.js';
+import { FindUserByIdUseCase } from '../../../application/useCase/users/findUserById/FindByIdUseCase.js';
+import { UserRepositoryPostgres } from '../../database/postgresql/repositories/user.repository.postgres.js';
+import { UserController } from '../../api/controllers/user.controller.js';
+import { UserRoutes } from '../../api/routes/user.route.js';
+import { TYPES_USER } from '../types.js';
 
 export const userModule = new ContainerModule((container) => {
   // REPOSITORIES

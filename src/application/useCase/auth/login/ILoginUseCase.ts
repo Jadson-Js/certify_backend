@@ -7,7 +7,7 @@ import type { IRefreshToken } from '../../../../domain/services/IJwtService.js';
 import type {
   ILoginInputDTO,
   ILoginOutputDTO,
-} from '../../../../infra/http/dtos/auth/ILogin.js';
+} from '../../../../infra/api/dtos/auth/ILogin.js';
 
 export interface ILoginUseCase {
   execute(params: ILoginInputDTO): Promise<ILoginOutputDTO>;
@@ -16,10 +16,4 @@ export interface ILoginUseCase {
     user: IUserEntity,
     authSessionId: string,
   ): Promise<{ accessToken: string; refreshToken: IRefreshToken }>;
-
-  createAuthSession(
-    authSessionId: string,
-    user: IUserEntity,
-    refreshToken: IRefreshToken,
-  ): Promise<null>;
 }

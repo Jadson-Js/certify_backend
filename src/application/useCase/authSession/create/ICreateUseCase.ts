@@ -1,10 +1,12 @@
-import type {
-  ICreateAuthSessionInputDTO,
-  ICreateAuthSessionOutputDTO,
-} from "../../../../infra/http/dtos/authSession/ICreate.js";
+import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
+import type { IRefreshToken } from '../../../../domain/services/IJwtService.js';
+
+export interface ICreateAuthSessionInputUseCase {
+  authSessionId: string;
+  user: IUserEntity;
+  refreshToken: IRefreshToken;
+}
 
 export interface ICreateAuthSessionUseCase {
-  execute(
-    params: ICreateAuthSessionInputDTO,
-  ): Promise<ICreateAuthSessionOutputDTO>;
+  execute(params: ICreateAuthSessionInputUseCase): Promise<null>;
 }

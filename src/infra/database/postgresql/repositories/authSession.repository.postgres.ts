@@ -1,14 +1,12 @@
-import { injectable } from "inversify";
-import type { IAuthSessionRepository } from "../../../../domain/repositories/IAuthSessionRepository.js";
-import type { ICreateAuthSessionInputDTO } from "../../../http/dtos/authSession/ICreate.js";
-import type { IAuthSessionEntity } from "../../../../domain/entities/authSession.entity.js";
-import { prisma } from "../../../../../prisma/prisma.js";
+import { injectable } from 'inversify';
+import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
+import type { ICreateAuthSessionInputDTO } from '../../../api/dtos/authSession/ICreate.js';
+import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
+import { prisma } from '../../../../../prisma/prisma.js';
 
 @injectable()
 export class authSessionRepositoryPostgres implements IAuthSessionRepository {
-  async create(
-    params: ICreateAuthSessionInputDTO,
-  ): Promise<IAuthSessionEntity> {
+  async create(params: IAuthSessionEntity): Promise<IAuthSessionEntity> {
     const authSession = await prisma.authSession.create({
       data: params,
     });

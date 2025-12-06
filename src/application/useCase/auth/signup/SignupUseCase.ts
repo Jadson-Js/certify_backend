@@ -1,12 +1,12 @@
-import { inject, injectable } from "inversify";
-import { TYPES_AUTH, TYPES_USER } from "../../../../infra/container/types.js";
-import type { ISignupUseCase } from "./ISignupUseCase.js";
+import { inject, injectable } from 'inversify';
+import { TYPES_AUTH, TYPES_USER } from '../../../../infra/container/types.js';
+import type { ISignupUseCase } from './ISignupUseCase.js';
 import type {
   ISignupInputDTO,
   ISignupOutputDTO,
-} from "../../../../infra/http/dtos/auth/ISignup.js";
-import type { IEncryptService } from "../../../../domain/services/IEncryptService.js";
-import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
+} from '../../../../infra/api/dtos/auth/ISignup.js';
+import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
+import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 
 @injectable()
 export class SignupUseCase implements ISignupUseCase {

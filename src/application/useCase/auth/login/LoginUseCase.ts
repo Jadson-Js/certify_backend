@@ -10,9 +10,8 @@ import type { IEncryptService } from '../../../../domain/services/IEncryptServic
 import type {
   ILoginInputDTO,
   ILoginOutputDTO,
-} from '../../../../infra/http/dtos/auth/ILogin.js';
+} from '../../../../infra/api/dtos/auth/ILogin.js';
 import {
-  ConflictError,
   NotFoundError,
   UnauthorizedError,
 } from '../../../../shared/error/AppError.js';
@@ -22,10 +21,6 @@ import type {
 } from '../../../../domain/services/IJwtService.js';
 import { toDTO } from './mapper.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import type {
-  AuthSessionEntity,
-  IAuthSessionEntity,
-} from '../../../../domain/entities/authSession.entity.js';
 import type { ICreateAuthSessionUseCase } from '../../authSession/create/ICreateUseCase.js';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 
@@ -75,7 +70,11 @@ export class LoginUseCase implements ILoginUseCase {
       authSessionId,
     );
 
-    await this.createAuthSession(authSessionId, user, refreshToken);
+    await this.createAuthSessionUseCase.execute({
+      authSessionId,
+      user,
+      refreshToken,
+    });
 
     return toDTO(user, accessToken, refreshToken.token);
   }
@@ -93,29 +92,5 @@ export class LoginUseCase implements ILoginUseCase {
     });
 
     return { accessToken, refreshToken: refreshToken };
-  }
-
-  async createAuthSession(
-    authSessionId: string,
-    user: IUserEntity,
-    refreshToken: IRefreshToken,
-  ): Promise<null> {
-    const refreshTokenHashed = await this.encryptService.hash(
-      refreshToken.token,
-    );
-
-    const authSessionTmp: IAuthSessionEntity = {
-      id: authSessionId,
-      user_id: user.id,
-      refresh_token_hash: refreshTokenHashed,
-      expires_at: refreshToken.expires_at,
-      revoked_at: null,
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-
-    await this.createAuthSessionUseCase.execute(authSessionTmp);
-
-    return null;
   }
 }

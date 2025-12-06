@@ -1,10 +1,10 @@
-import { injectable } from "inversify";
-import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
-import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
-import { prisma } from "../../../../../prisma/prisma.js";
-import type { IFindUserByIdInputDTO } from "../../../http/dtos/user/IFindById.js";
-import type { IFindUserByEmailInputDTO } from "../../../http/dtos/user/IFindByEmail.js";
-import type { ICreateUserInputDTO } from "../../../http/dtos/user/ICreate.js";
+import { injectable } from 'inversify';
+import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
+import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
+import { prisma } from '../../../../../prisma/prisma.js';
+import type { IFindUserByIdInputDTO } from '../../../api/dtos/user/IFindById.js';
+import type { IFindUserByEmailInputDTO } from '../../../api/dtos/user/IFindByEmail.js';
+import type { ICreateUserInputDTO } from '../../../api/dtos/user/ICreate.js';
 
 @injectable()
 export class UserRepositoryPostgres implements IUserRepository {

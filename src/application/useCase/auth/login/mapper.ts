@@ -1,5 +1,5 @@
-import type { IUserEntity } from "../../../../domain/entities/user.entity.js";
-import type { ILoginOutputDTO } from "../../../../infra/http/dtos/auth/ILogin.js";
+import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
+import type { ILoginOutputDTO } from '../../../../infra/api/dtos/auth/ILogin.js';
 
 export function toDTO(
   user: IUserEntity,
