@@ -1,13 +1,13 @@
-import { inject, injectable } from "inversify";
-import { ok } from "../../../shared/utils/helper.js";
-import { TYPES_USER } from "../../container/types.js";
-import type { IFindAllUsersUseCase } from "../../../application/useCase/users/findAll/IFindAll.js";
-import type { IFindUserByIdUseCase } from "../../../application/useCase/users/findUserById/IFindByIdUseCase.js";
-import type { IFindUserByEmailUseCase } from "../../../application/useCase/users/findUserByEmail/IFindByEmailUseCase.js";
-import type { ICreateUserUseCase } from "../../../application/useCase/users/create/ICreateUseCase.js";
-import type { IDeleteAllUsersUseCase } from "../../../application/useCase/users/deleteAll/IDeleteAllUsers.js";
-import type { Request, Response } from "express";
-import { BadRequestError } from "../../../shared/error/AppError.js";
+import { inject, injectable } from 'inversify';
+import { ok } from '../../../shared/utils/helper.js';
+import { TYPES_USER } from '../../container/types.js';
+import type { IFindAllUsersUseCase } from '../../../application/useCase/users/findAll/IFindAll.js';
+import type { IFindUserByIdUseCase } from '../../../application/useCase/users/findUserById/IFindByIdUseCase.js';
+import type { IFindUserByEmailUseCase } from '../../../application/useCase/users/findUserByEmail/IFindByEmailUseCase.js';
+import type { ICreateUserUseCase } from '../../../application/useCase/users/create/ICreateUseCase.js';
+import type { IDeleteAllUsersUseCase } from '../../../application/useCase/users/deleteAll/IDeleteAllUsers.js';
+import type { Request, Response } from 'express';
+import { BadRequestError } from '../../../shared/error/AppError.js';
 
 @injectable()
 export class UserController {
@@ -31,7 +31,7 @@ export class UserController {
   async findAll(req: Request, res: Response) {
     const response = await this.findAllUseCase.execute();
 
-    return ok(res, 200, "User found successfully", response);
+    return ok(res, 200, 'User found successfully', response);
   }
 
   async findById(req: Request, res: Response) {
@@ -40,16 +40,16 @@ export class UserController {
     if (!id) throw new BadRequestError();
 
     const response = await this.findByIdUseCase.execute({ id });
-    return ok(res, 200, "User found successfully", response);
+    return ok(res, 200, 'User found successfully', response);
   }
 
   async findByEmail(req: Request, res: Response) {
     const email = req.params.email;
 
-    if (!email) throw new BadRequestError("Email params is required");
+    if (!email) throw new BadRequestError('Email params is required');
 
     const response = await this.findByEmailUseCase.execute({ email });
-    return ok(res, 200, "User found successfully", response);
+    return ok(res, 200, 'User found successfully', response);
   }
 
   async create(req: Request, res: Response) {
@@ -63,7 +63,7 @@ export class UserController {
 
     const response = await this.createUseCase.execute(input);
 
-    return ok(res, 201, "User created successfully", response);
+    return ok(res, 201, 'User created successfully', response);
   }
 
   async deleteAll(req: Request, res: Response) {

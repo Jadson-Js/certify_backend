@@ -1,8 +1,8 @@
-import type { NextFunction, Request, Response } from "express";
-import type z from "zod";
+import type { NextFunction, Request, Response } from 'express';
+import type z from 'zod';
 
 export const validate =
-  (schema: z.ZodObject, source: "body" | "params" | "query" = "body") =>
+  (schema: z.ZodObject, source: 'body' | 'params' | 'query' = 'body') =>
   (req: Request, res: Response, next: NextFunction) => {
     const parsed = schema.safeParse(req[source]);
     if (!parsed.success) {

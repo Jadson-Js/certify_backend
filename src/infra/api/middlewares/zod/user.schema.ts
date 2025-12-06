@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from 'zod';
 
 export const findUserByIdSchema = z.object({
   id: z.string().min(3).max(255),

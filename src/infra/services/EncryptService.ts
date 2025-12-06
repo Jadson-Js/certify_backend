@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
-import type { IEncryptService } from "../../domain/services/IEncryptService.js";
+import bcrypt from 'bcryptjs';
+import type { IEncryptService } from '../../domain/services/IEncryptService.js';
 
 export class EncryptService implements IEncryptService {
   private readonly SALT_ROUNDS = 10;

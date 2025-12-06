@@ -1,7 +1,7 @@
-import { inject, injectable } from "inversify";
-import { TYPES_USER } from "../../../../infra/container/types.js";
-import type { IDeleteAllUsersUseCase } from "./IDeleteAllUsers.js";
-import type { IUserRepository } from "../../../../domain/repositories/IUserRepository.js";
+import { inject, injectable } from 'inversify';
+import { TYPES_USER } from '../../../../infra/container/types.js';
+import type { IDeleteAllUsersUseCase } from './IDeleteAllUsers.js';
+import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 
 @injectable()
 export class DeleteAllUsersUseCase implements IDeleteAllUsersUseCase {
