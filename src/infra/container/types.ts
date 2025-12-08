@@ -6,8 +6,6 @@ export const TYPES_USER = {
   IFindAllUsersUseCase: Symbol.for('IFindAllUsersUseCase'),
   IFindUserByIdUseCase: Symbol.for('IFindUserByIdUseCase'),
   IFindUserByEmailUseCase: Symbol.for('IFindUserByEmailUseCase'),
-  ICreateUserUseCase: Symbol.for('ICreateUserUseCase'),
-  IDeleteAllUsersUseCase: Symbol.for('IDeleteAllUsersUseCase'),
 
   // Controllers
   UserController: Symbol.for('UserController'),

@@ -4,8 +4,6 @@ import { TYPES_USER } from '../../container/types.js';
 import type { IFindAllUsersUseCase } from '../../../application/useCase/users/findAll/IFindAll.js';
 import type { IFindUserByIdUseCase } from '../../../application/useCase/users/findById/IFindByIdUseCase.js';
 import type { IFindUserByEmailUseCase } from '../../../application/useCase/users/findByEmail/IFindByEmailUseCase.js';
-import type { ICreateUserUseCase } from '../../../application/useCase/users/create/ICreateUseCase.js';
-import type { IDeleteAllUsersUseCase } from '../../../application/useCase/users/deleteAll/IDeleteAllUsers.js';
 import type { Request, Response } from 'express';
 import { BadRequestError } from '../../../shared/error/AppError.js';
 
@@ -20,12 +18,6 @@ export class UserController {
 
     @inject(TYPES_USER.IFindUserByEmailUseCase)
     private readonly findByEmailUseCase: IFindUserByEmailUseCase,
-
-    @inject(TYPES_USER.ICreateUserUseCase)
-    private readonly createUseCase: ICreateUserUseCase,
-
-    @inject(TYPES_USER.IDeleteAllUsersUseCase)
-    private readonly deleteAllUseCase: IDeleteAllUsersUseCase,
   ) {}
 
   async findAll(req: Request, res: Response) {
@@ -50,25 +42,5 @@ export class UserController {
 
     const response = await this.findByEmailUseCase.execute({ email });
     return ok(res, 200, 'User found successfully', response);
-  }
-
-  async create(req: Request, res: Response) {
-    const data = req.body;
-
-    const input = {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-    };
-
-    const response = await this.createUseCase.execute(input);
-
-    return ok(res, 201, 'User created successfully', response);
-  }
-
-  async deleteAll(req: Request, res: Response) {
-    await this.deleteAllUseCase.execute();
-
-    return ok(res, 204);
   }
 }

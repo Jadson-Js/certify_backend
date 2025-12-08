@@ -4,7 +4,6 @@ import type { UserController } from '../controllers/user.controller.js';
 import { Router } from 'express';
 import { ensureAuthenticated } from '../middlewares/ensureAuthentticated.js';
 import {
-  createUserSchema,
   findUserByEmailSchema,
   findUserByIdSchema,
 } from '../middlewares/zod/user.schema.js';
@@ -37,14 +36,6 @@ export class UserRoutes {
       validate(findUserByEmailSchema, 'params'),
       this.userController.findByEmail.bind(this.userController),
     );
-
-    router.post(
-      '/',
-      validate(createUserSchema, 'body'),
-      this.userController.create.bind(this.userController),
-    );
-
-    router.delete('/', this.userController.deleteAll.bind(this.userController));
 
     return router;
   }

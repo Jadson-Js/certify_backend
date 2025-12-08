@@ -4,7 +4,6 @@ import type { IUserRepository } from '../../../../domain/repositories/IUserRepos
 import { prisma } from '../../../../../prisma/prisma.js';
 import type { IFindUserByIdInputDTO } from '../../../api/dtos/user/IFindById.js';
 import type { IFindUserByEmailInputDTO } from '../../../api/dtos/user/IFindByEmail.js';
-import type { ICreateUserInputDTO } from '../../../api/dtos/user/ICreate.js';
 
 @injectable()
 export class UserRepositoryPostgres implements IUserRepository {
@@ -30,11 +29,13 @@ export class UserRepositoryPostgres implements IUserRepository {
     return user;
   }
 
-  async create(params: ICreateUserInputDTO): Promise<IUserEntity> {
-    const { name, email, password } = params;
-
+  async create(params: {
+    name: string;
+    email: string;
+    password_hash: string;
+  }): Promise<IUserEntity> {
     const user = await prisma.user.create({
-      data: { name, email, password_hash: password },
+      data: params,
     });
 
     return user;

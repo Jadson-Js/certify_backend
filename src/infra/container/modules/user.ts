@@ -1,6 +1,4 @@
 import { ContainerModule } from 'inversify';
-import { CreateUserUseCase } from '../../../application/useCase/users/create/CreateUseCase.js';
-import { DeleteAllUsersUseCase } from '../../../application/useCase/users/deleteAll/DeleteAllUsersUseCase.js';
 import { FindAllUsersUseCase } from '../../../application/useCase/users/findAll/FindAllUseCase.js';
 import { FindUserByEmailUseCase } from '../../../application/useCase/users/findByEmail/FindByEmailUseCase.js';
 import { FindUserByIdUseCase } from '../../../application/useCase/users/findById/FindByIdUseCase.js';
@@ -28,14 +26,6 @@ export const userModule = new ContainerModule((container) => {
   container
     .bind(TYPES_USER.IFindUserByEmailUseCase)
     .to(FindUserByEmailUseCase)
-    .inSingletonScope();
-  container
-    .bind(TYPES_USER.ICreateUserUseCase)
-    .to(CreateUserUseCase)
-    .inSingletonScope();
-  container
-    .bind(TYPES_USER.IDeleteAllUsersUseCase)
-    .to(DeleteAllUsersUseCase)
     .inSingletonScope();
 
   // CONTROLLERS
