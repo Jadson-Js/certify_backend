@@ -4,6 +4,7 @@ import type { ISignupUseCase } from '../../../application/useCase/auth/signup/IS
 import type { ILoginUseCase } from '../../../application/useCase/auth/login/ILoginUseCase.js';
 import type { Request, Response } from 'express';
 import { ok } from '../../../shared/utils/helper.js';
+import type { ITokenUseCase } from '../../../application/useCase/auth/token/ITokenUseCase.js';
 
 @injectable()
 export class AuthController {
@@ -13,6 +14,9 @@ export class AuthController {
 
     @inject(TYPES_AUTH.ILoginUseCase)
     private readonly loginUseCase: ILoginUseCase,
+
+    @inject(TYPES_AUTH.ITokenUseCase)
+    private readonly tokenUseCase: ITokenUseCase,
   ) {}
 
   async signup(req: Request, res: Response) {
@@ -40,5 +44,17 @@ export class AuthController {
     const response = await this.loginUseCase.execute(input);
 
     return ok(res, 200, 'Login successfully', response);
+  }
+
+  async token(req: Request, res: Response) {
+    const data = req.body;
+
+    const input = {
+      refreshToken: data.refreshToken,
+    };
+
+    const response = await this.tokenUseCase.execute(input);
+
+    return ok(res, 200, 'Token successfully', response);
   }
 }

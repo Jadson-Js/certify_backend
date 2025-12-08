@@ -6,6 +6,7 @@ export function toDTO(user: IUserEntity): IFindUserByIdOutputDTO {
     id: user.id,
     name: user.name,
     email: user.email,
+    verified_at: user.verified_at,
     created_at: user.created_at,
   };
 

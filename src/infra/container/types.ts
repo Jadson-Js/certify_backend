@@ -24,6 +24,7 @@ export const TYPES_AUTH = {
   // Use Cases
   ISignupUseCase: Symbol.for('ISignupUseCase'),
   ILoginUseCase: Symbol.for('ILoginUseCase'),
+  ITokenUseCase: Symbol.for('ITokenUseCase'),
 
   // Controllers
   AuthController: Symbol.for('AuthController'),
@@ -37,5 +38,7 @@ export const TYPES_AUTH_SESSION = {
   IAuthSessionRepository: Symbol.for('IAuthSessionRepository'),
 
   // Use Cases
+  IFindAuthSessionByIdUseCase: Symbol.for('IFindAuthSessionByIdUseCase'),
   ICreateAuthSessionUseCase: Symbol.for('ICreateAuthSessionUseCase'),
+  IDeleteAuthSessionByIdUseCase: Symbol.for('IDeleteAuthSessionByIdUseCase'),
 };

@@ -8,6 +8,7 @@ import type {
 } from '../../../../infra/api/dtos/user/IFindById.js';
 import { NotFoundError } from '../../../../shared/error/AppError.js';
 import { toDTO } from './mapper.js';
+import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 
 @injectable()
 export class FindUserByIdUseCase implements IFindUserByIdUseCase {
@@ -16,15 +17,13 @@ export class FindUserByIdUseCase implements IFindUserByIdUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(
-    params: IFindUserByIdInputDTO,
-  ): Promise<IFindUserByIdOutputDTO> {
+  async execute(params: IFindUserByIdInputDTO): Promise<IUserEntity> {
     const users = await this.userRepository.findById(params);
 
     if (!users) {
       throw new NotFoundError(`User not found by id ${params.id}`);
     }
 
-    return toDTO(users);
+    return users;
   }
 }

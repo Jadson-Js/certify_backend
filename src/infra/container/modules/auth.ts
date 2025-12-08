@@ -6,6 +6,7 @@ import { JwtService } from '../../services/JwtService.js';
 import { TYPES_AUTH } from '../types.js';
 import { AuthRoutes } from '../../api/routes/auth.route.js';
 import { AuthController } from '../../api/controllers/auth.controller.js';
+import { TokenUseCase } from '../../../application/useCase/auth/token/TokenUseCase.js';
 
 export const authModule = new ContainerModule((container) => {
   // SERVICES
@@ -21,6 +22,7 @@ export const authModule = new ContainerModule((container) => {
     .to(SignupUseCase)
     .inSingletonScope();
   container.bind(TYPES_AUTH.ILoginUseCase).to(LoginUseCase).inSingletonScope();
+  container.bind(TYPES_AUTH.ITokenUseCase).to(TokenUseCase).inSingletonScope();
 
   // CONTROLLERS
   container
