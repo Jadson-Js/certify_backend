@@ -5,10 +5,6 @@ import type {
   ISignupOutputUseCase,
   ISignupUseCase,
 } from './ISignupUseCase.js';
-import type {
-  ISignupInputDTO,
-  ISignupOutputDTO,
-} from '../../../../infra/api/dtos/auth/ISignup.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import { toDTO } from './mapper.js';

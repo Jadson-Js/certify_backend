@@ -11,22 +11,16 @@ import {
   TYPES_USER,
 } from '../../../../infra/container/types.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
-import type {
-  ILoginInputDTO,
-  ILoginOutputDTO,
-} from '../../../../infra/api/dtos/auth/ILogin.js';
 import {
   NotFoundError,
   UnauthorizedError,
 } from '../../../../shared/error/AppError.js';
-import type { IJwtService } from '../../../../domain/services/IJwtService.js';
-import { toDTO } from './mapper.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
 import { generateTokens } from '../../../../shared/utils/generateTokens.js';
+import type { IJwtService } from '../../../../domain/services/IJwtService.js';
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
@@ -34,33 +28,27 @@ export class LoginUseCase implements ILoginUseCase {
     @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
 
-    @inject(TYPES_AUTH.IEncryptService)
-    private readonly encryptService: IEncryptService,
+    @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
+    private readonly authSessionRepository: IAuthSessionRepository,
 
     @inject(TYPES_AUTH.IJwtService)
     private readonly jwtService: IJwtService,
 
-    @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
-    private readonly authSessionRepository: IAuthSessionRepository,
+    @inject(TYPES_AUTH.IEncryptService)
+    private readonly encryptService: IEncryptService,
   ) {}
 
   async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
     const { email, password } = params;
 
     const user = await this.userRepository.findByEmail({ email });
-
-    if (!user) {
-      throw new NotFoundError(`User not found by email: ${email}`);
-    }
+    if (!user) throw new NotFoundError(`User not found by email: ${email}`);
 
     const validPassword = await this.encryptService.compare(
       password,
       user.password_hash,
     );
-
-    if (!validPassword) {
-      throw new UnauthorizedError('Invalid credentials');
-    }
+    if (!validPassword) throw new UnauthorizedError('Invalid credentials');
 
     /* 
     if (!user.verified_at) {
@@ -68,20 +56,22 @@ export class LoginUseCase implements ILoginUseCase {
     }
     */
 
-    const authSessionId = randomUUID();
-    const { accessToken, refreshToken } = await generateTokens(
-      user.id,
-      authSessionId,
-    );
+    const accessToken = this.jwtService.generateAccessToken({
+      user_id: user.id,
+    });
 
+    const authSessionId = randomUUID();
+    const refreshToken = this.jwtService.generateRefreshToken({
+      auth_session_id: authSessionId,
+    });
     const refreshTokenHashed = await this.encryptService.hash(refreshToken);
-    const expiresAtToken = await extractExpiresAtInToken(refreshToken);
+    const expiresRefreshToken = await extractExpiresAtInToken(refreshToken);
 
     const authSessionTmp: IAuthSessionEntity = {
       id: authSessionId,
       user_id: user.id,
       refresh_token_hash: refreshTokenHashed,
-      expires_at: expiresAtToken,
+      expires_at: expiresRefreshToken,
       revoked_at: null,
       created_at: new Date(),
       updated_at: new Date(),

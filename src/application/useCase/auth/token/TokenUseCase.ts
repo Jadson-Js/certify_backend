@@ -21,21 +21,22 @@ import type { IFindUserByIdUseCase } from '../../users/findById/IFindByIdUseCase
 import { randomUUID } from 'crypto';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
+import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 
 @injectable()
 export class TokenUseCase implements ITokenUseCase {
   constructor(
-    @inject(TYPES_USER.IFindUserByIdUseCase)
-    private readonly findUserByIdUseCase: IFindUserByIdUseCase,
+    @inject(TYPES_USER.IUserRepository)
+    private readonly userRepository: IUserRepository,
+
+    @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
+    private readonly authSessionRepository: IAuthSessionRepository,
 
     @inject(TYPES_AUTH.IEncryptService)
     private readonly encryptService: IEncryptService,
 
     @inject(TYPES_AUTH.IJwtService)
     private readonly jwtService: IJwtService,
-
-    @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
-    private readonly authSessionRepository: IAuthSessionRepository,
   ) {}
 
   async execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase> {
@@ -56,27 +57,26 @@ export class TokenUseCase implements ITokenUseCase {
     if (authSession.revoked_at !== null)
       throw new UnauthorizedError('Auth Session is revoked');
 
-    const user = await this.findUserByIdUseCase.execute({
+    await this.authSessionRepository.deleteById({ id: authSession.id });
+
+    const user = await this.userRepository.findById({
       id: authSession.user_id,
     });
+    if (!user) throw new NotFoundError('User not found');
     /*
     if (user.verified_at == null)
       throw new UnauthorizedError('The user is not verified');
     // Validar se o User está bloqueado
     */
 
-    await this.authSessionRepository.deleteById({ id: authSession.id });
-
-    const newAuthSessionId = randomUUID();
-    const refreshToken = this.jwtService.generateRefreshToken({
-      auth_session_id: newAuthSessionId,
-    });
-
     const accessToken = this.jwtService.generateAccessToken({
-      user_id: user.id,
+      user_id: user?.id,
     });
 
     const authSessionId = randomUUID();
+    const refreshToken = this.jwtService.generateRefreshToken({
+      auth_session_id: authSessionId,
+    });
 
     const refreshTokenHashed = await this.encryptService.hash(refreshToken);
     const expiresAtToken = await extractExpiresAtInToken(refreshToken);
