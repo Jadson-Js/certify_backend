@@ -23,6 +23,8 @@ import type { IAuthSessionEntity } from '../../../../domain/entities/authSession
 import type { IDeleteAuthSessionByIdUseCase } from '../../authSession/deleteById/IDeleteByIdUseCase.js';
 import type { IFindUserByIdUseCase } from '../../users/findById/IFindByIdUseCase.js';
 import { randomUUID } from 'crypto';
+import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
+import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 
 @injectable()
 export class TokenUseCase implements ITokenUseCase {
@@ -44,6 +46,9 @@ export class TokenUseCase implements ITokenUseCase {
 
     @inject(TYPES_AUTH.IJwtService)
     private readonly jwtService: IJwtService,
+
+    @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
+    private readonly authSessionRepository: IAuthSessionRepository,
   ) {}
 
   async execute(params: ITokenInputDTO): Promise<ITokenOutputDTO> {
@@ -90,6 +95,23 @@ export class TokenUseCase implements ITokenUseCase {
       user_id: user.id,
     });
 
-    return { accessToken, refreshToken: refreshToken.token };
+    const authSessionId = randomUUID();
+
+    const refreshTokenHashed = await this.encryptService.hash(refreshToken);
+    const expiresAtToken = await extractExpiresAtInToken(refreshToken);
+
+    const authSessionTmp: IAuthSessionEntity = {
+      id: authSessionId,
+      user_id: user.id,
+      refresh_token_hash: refreshTokenHashed,
+      expires_at: expiresAtToken,
+      revoked_at: null,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+
+    await this.authSessionRepository.create(authSessionTmp);
+
+    return { accessToken, refreshToken };
   }
 }

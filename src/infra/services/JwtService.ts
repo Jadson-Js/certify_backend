@@ -27,10 +27,7 @@ export class JwtService implements IJwtService {
     return jwt.sign(payload, this.JWT_ACCESS_SECRET, options);
   }
 
-  generateRefreshToken(payload: { auth_session_id: string }): {
-    token: string;
-    expires_at: Date;
-  } {
+  generateRefreshToken(payload: { auth_session_id: string }): string {
     if (!this.JWT_REFRESH_SECRET || !this.JWT_REFRESH_EXPIRES) {
       throw new InternalServerError('JWT configuration is missing');
     }
@@ -42,13 +39,7 @@ export class JwtService implements IJwtService {
       >,
     };
 
-    const token = jwt.sign(payload, this.JWT_REFRESH_SECRET, options);
-
-    const decoded = jwt.decode(token) as { exp: number };
-
-    const expires_at = new Date(decoded.exp * 1000);
-
-    return { token, expires_at };
+    return jwt.sign(payload, this.JWT_REFRESH_SECRET, options);
   }
 
   verifyAccess(accessToken: string): Record<string, unknown> {

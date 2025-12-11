@@ -15,14 +15,15 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from '../../../../shared/error/AppError.js';
-import type {
-  IJwtService,
-  IRefreshToken,
-} from '../../../../domain/services/IJwtService.js';
+import type { IJwtService } from '../../../../domain/services/IJwtService.js';
 import { toDTO } from './mapper.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import type { ICreateAuthSessionUseCase } from '../../authSession/create/ICreateUseCase.js';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
+import { generateTokens } from '../../../../shared/utils/generateTokens.js';
+import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
+import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
+import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
@@ -38,6 +39,9 @@ export class LoginUseCase implements ILoginUseCase {
 
     @inject(TYPES_AUTH.IJwtService)
     private readonly jwtService: IJwtService,
+
+    @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
+    private readonly authSessionRepository: IAuthSessionRepository,
   ) {}
 
   async execute(params: ILoginInputDTO): Promise<ILoginOutputDTO> {
@@ -65,8 +69,8 @@ export class LoginUseCase implements ILoginUseCase {
     */
 
     const authSessionId = randomUUID();
-    const { accessToken, refreshToken } = await this.generateTokens(
-      user,
+    const { accessToken, refreshToken } = await generateTokens(
+      user.id,
       authSessionId,
     );
 
@@ -76,21 +80,21 @@ export class LoginUseCase implements ILoginUseCase {
       refreshToken,
     });
 
-    return toDTO(user, accessToken, refreshToken.token);
-  }
+    const refreshTokenHashed = await this.encryptService.hash(refreshToken);
+    const expiresAtToken = await extractExpiresAtInToken(refreshToken);
 
-  async generateTokens(
-    user: IUserEntity,
-    authSessionId: string,
-  ): Promise<{ accessToken: string; refreshToken: IRefreshToken }> {
-    const accessToken = this.jwtService.generateAccessToken({
+    const authSessionTmp: IAuthSessionEntity = {
+      id: authSessionId,
       user_id: user.id,
-    });
+      refresh_token_hash: refreshTokenHashed,
+      expires_at: expiresAtToken,
+      revoked_at: null,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
 
-    const refreshToken = this.jwtService.generateRefreshToken({
-      auth_session_id: authSessionId,
-    });
+    await this.authSessionRepository.create(authSessionTmp);
 
-    return { accessToken, refreshToken: refreshToken };
+    return toDTO(user, accessToken, refreshToken);
   }
 }

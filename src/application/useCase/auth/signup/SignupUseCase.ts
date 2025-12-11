@@ -25,7 +25,7 @@ export class SignupUseCase implements ISignupUseCase {
     const user = await this.userRepository.create({
       name,
       email,
-      password: hashPassword,
+      password_hash: hashPassword,
     });
 
     return user;
