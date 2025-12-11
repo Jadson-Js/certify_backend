@@ -1,12 +1,17 @@
 import { inject, injectable } from 'inversify';
 import { TYPES_AUTH, TYPES_USER } from '../../../../infra/container/types.js';
-import type { ISignupUseCase } from './ISignupUseCase.js';
+import type {
+  ISignupInputUseCase,
+  ISignupOutputUseCase,
+  ISignupUseCase,
+} from './ISignupUseCase.js';
 import type {
   ISignupInputDTO,
   ISignupOutputDTO,
 } from '../../../../infra/api/dtos/auth/ISignup.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
+import { toDTO } from './mapper.js';
 
 @injectable()
 export class SignupUseCase implements ISignupUseCase {
@@ -18,7 +23,7 @@ export class SignupUseCase implements ISignupUseCase {
     private readonly encryptService: IEncryptService,
   ) {}
 
-  async execute(params: ISignupInputDTO): Promise<ISignupOutputDTO> {
+  async execute(params: ISignupInputUseCase): Promise<ISignupOutputUseCase> {
     const { name, email, password } = params;
     const hashPassword = await this.encryptService.hash(password);
 
@@ -28,6 +33,6 @@ export class SignupUseCase implements ISignupUseCase {
       password_hash: hashPassword,
     });
 
-    return user;
+    return toDTO(user);
   }
 }

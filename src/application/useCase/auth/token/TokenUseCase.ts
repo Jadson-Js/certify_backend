@@ -4,23 +4,19 @@ import {
   TYPES_AUTH_SESSION,
   TYPES_USER,
 } from '../../../../infra/container/types.js';
-import type { ITokenUseCase } from './ITokenUseCase.js';
-import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import type { ICreateAuthSessionUseCase } from '../../authSession/create/ICreateUseCase.js';
+import type {
+  ITokenInputUseCase,
+  ITokenOutputUseCase,
+  ITokenUseCase,
+} from './ITokenUseCase.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
-import type {
-  ITokenInputDTO,
-  ITokenOutputDTO,
-} from '../../../../infra/api/dtos/auth/IToken.js';
 import {
   ConflictError,
   NotFoundError,
   UnauthorizedError,
 } from '../../../../shared/error/AppError.js';
-import type { IFindAuthSessionByIdUseCase } from '../../authSession/findById/IFindByIdUseCase.js';
 import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
-import type { IDeleteAuthSessionByIdUseCase } from '../../authSession/deleteById/IDeleteByIdUseCase.js';
 import type { IFindUserByIdUseCase } from '../../users/findById/IFindByIdUseCase.js';
 import { randomUUID } from 'crypto';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
@@ -29,17 +25,8 @@ import type { IAuthSessionRepository } from '../../../../domain/repositories/IAu
 @injectable()
 export class TokenUseCase implements ITokenUseCase {
   constructor(
-    @inject(TYPES_AUTH_SESSION.ICreateAuthSessionUseCase)
-    private readonly createAuthSessionUseCase: ICreateAuthSessionUseCase,
-
-    @inject(TYPES_AUTH_SESSION.IFindAuthSessionByIdUseCase)
-    private readonly findAuthSessionByIdUseCase: IFindAuthSessionByIdUseCase,
-
     @inject(TYPES_USER.IFindUserByIdUseCase)
     private readonly findUserByIdUseCase: IFindUserByIdUseCase,
-
-    @inject(TYPES_AUTH_SESSION.IDeleteAuthSessionByIdUseCase)
-    private readonly deleteAuthSessionByIdUseCase: IDeleteAuthSessionByIdUseCase,
 
     @inject(TYPES_AUTH.IEncryptService)
     private readonly encryptService: IEncryptService,
@@ -51,7 +38,7 @@ export class TokenUseCase implements ITokenUseCase {
     private readonly authSessionRepository: IAuthSessionRepository,
   ) {}
 
-  async execute(params: ITokenInputDTO): Promise<ITokenOutputDTO> {
+  async execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase> {
     // [CONCLUIDO] Verifica de refresh token é valido
     // Verifica na table authSession se este token existe, se não foi expirado, não foi revogado, user foi verifiead
     // deleta o authSession atual
@@ -60,7 +47,7 @@ export class TokenUseCase implements ITokenUseCase {
     const decodedJwt = this.jwtService.verifyRefresh(params.refreshToken);
     if (!decodedJwt) throw new UnauthorizedError('Refresh token is not valid');
 
-    const authSession = await this.findAuthSessionByIdUseCase.execute({
+    const authSession = await this.authSessionRepository.findById({
       id: decodedJwt.auth_session_id as string,
     });
     if (!authSession) throw new NotFoundError('Auth Session not found');
@@ -78,17 +65,11 @@ export class TokenUseCase implements ITokenUseCase {
     // Validar se o User está bloqueado
     */
 
-    await this.deleteAuthSessionByIdUseCase.execute({ id: authSession.id });
+    await this.authSessionRepository.deleteById({ id: authSession.id });
 
     const newAuthSessionId = randomUUID();
     const refreshToken = this.jwtService.generateRefreshToken({
       auth_session_id: newAuthSessionId,
-    });
-
-    const newAuthSession = this.createAuthSessionUseCase.execute({
-      authSessionId: newAuthSessionId,
-      user,
-      refreshToken,
     });
 
     const accessToken = this.jwtService.generateAccessToken({

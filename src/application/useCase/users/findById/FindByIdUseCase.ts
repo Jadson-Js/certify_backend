@@ -1,5 +1,9 @@
 import { inject, injectable } from 'inversify';
-import type { IFindUserByIdUseCase } from './IFindByIdUseCase.js';
+import type {
+  IFindUserByIdInputUseCase,
+  IFindUserByIdOutputUseCase,
+  IFindUserByIdUseCase,
+} from './IFindByIdUseCase.js';
 import { TYPES_USER } from '../../../../infra/container/types.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import type {
@@ -17,7 +21,9 @@ export class FindUserByIdUseCase implements IFindUserByIdUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(params: IFindUserByIdInputDTO): Promise<IUserEntity> {
+  async execute(
+    params: IFindUserByIdInputUseCase,
+  ): Promise<IFindUserByIdOutputUseCase> {
     const users = await this.userRepository.findById(params);
 
     if (!users) {

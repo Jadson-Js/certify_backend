@@ -1,9 +1,17 @@
-import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
-import type {
-  IFindUserByIdInputDTO,
-  IFindUserByIdOutputDTO,
-} from '../../../../infra/api/dtos/user/IFindById.js';
+export interface IFindUserByIdInputUseCase {
+  id: string;
+}
+
+export interface IFindUserByIdOutputUseCase {
+  id: string;
+  name: string;
+  email: string;
+  verified_at: Date | null;
+  created_at: Date;
+}
 
 export interface IFindUserByIdUseCase {
-  execute(params: IFindUserByIdInputDTO): Promise<IUserEntity>;
+  execute(
+    params: IFindUserByIdInputUseCase,
+  ): Promise<IFindUserByIdOutputUseCase>;
 }

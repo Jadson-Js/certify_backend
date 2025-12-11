@@ -1,8 +1,16 @@
-import type {
-  IFindUserByEmailInputDTO,
-  IFindUserByEmailOutputDTO,
-} from '../../../../infra/api/dtos/user/IFindByEmail.js';
+export interface IFindUserByEmailInputUseCase {
+  email: string;
+}
+
+export interface IFindUserByEmailOutputUseCase {
+  id: string;
+  name: string;
+  email: string;
+  created_at: Date;
+}
 
 export interface IFindUserByEmailUseCase {
-  execute(params: IFindUserByEmailInputDTO): Promise<IFindUserByEmailOutputDTO>;
+  execute(
+    params: IFindUserByEmailInputUseCase,
+  ): Promise<IFindUserByEmailOutputUseCase>;
 }

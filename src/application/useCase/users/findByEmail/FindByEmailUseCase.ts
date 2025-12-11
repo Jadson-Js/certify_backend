@@ -1,6 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { TYPES_USER } from '../../../../infra/container/types.js';
-import type { IFindUserByEmailUseCase } from './IFindByEmailUseCase.js';
+import type {
+  IFindUserByEmailInputUseCase,
+  IFindUserByEmailOutputUseCase,
+  IFindUserByEmailUseCase,
+} from './IFindByEmailUseCase.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import type {
   IFindUserByEmailInputDTO,
@@ -17,8 +21,8 @@ export class FindUserByEmailUseCase implements IFindUserByEmailUseCase {
   ) {}
 
   async execute(
-    params: IFindUserByEmailInputDTO,
-  ): Promise<IFindUserByEmailOutputDTO> {
+    params: IFindUserByEmailInputUseCase,
+  ): Promise<IFindUserByEmailOutputUseCase> {
     const users = await this.userRepository.findByEmail(params);
 
     if (!users) {

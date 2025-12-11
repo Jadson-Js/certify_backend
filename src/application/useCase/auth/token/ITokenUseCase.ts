@@ -1,8 +1,12 @@
-import type {
-  ITokenInputDTO,
-  ITokenOutputDTO,
-} from '../../../../infra/api/dtos/auth/IToken.js';
+export interface ITokenInputUseCase {
+  refreshToken: string;
+}
+
+export interface ITokenOutputUseCase {
+  accessToken: string;
+  refreshToken: string;
+}
 
 export interface ITokenUseCase {
-  execute(params: ITokenInputDTO): Promise<ITokenOutputDTO>;
+  execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase>;
 }

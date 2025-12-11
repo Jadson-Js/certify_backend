@@ -1,9 +1,15 @@
-import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
-import type {
-  ILoginInputDTO,
-  ILoginOutputDTO,
-} from '../../../../infra/api/dtos/auth/ILogin.js';
+import type { ILoginInputDTO } from '../../../../infra/api/dtos/auth/ILogin.js';
+
+export interface ILoginInputUseCase {
+  email: string;
+  password: string;
+}
+
+export interface ILoginOutputUseCase {
+  accessToken: string;
+  refreshToken: string;
+}
 
 export interface ILoginUseCase {
-  execute(params: ILoginInputDTO): Promise<ILoginOutputDTO>;
+  execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase>;
 }

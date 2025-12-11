@@ -1,5 +1,10 @@
-import type { IFindAllUsersOutputDTO } from '../../../../infra/api/dtos/user/IFindAll.js';
+export interface IFindAllUsersOutputUseCase {
+  id: string;
+  name: string;
+  email: string;
+  created_at: Date;
+}
 
 export interface IFindAllUsersUseCase {
-  execute(): Promise<IFindAllUsersOutputDTO[]>;
+  execute(): Promise<IFindAllUsersOutputUseCase[]>;
 }

@@ -1,6 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { randomUUID } from 'crypto';
-import type { ILoginUseCase } from './ILoginUseCase.js';
+import type {
+  ILoginInputUseCase,
+  ILoginOutputUseCase,
+  ILoginUseCase,
+} from './ILoginUseCase.js';
 import {
   TYPES_AUTH,
   TYPES_AUTH_SESSION,
@@ -18,21 +22,17 @@ import {
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
 import { toDTO } from './mapper.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import type { ICreateAuthSessionUseCase } from '../../authSession/create/ICreateUseCase.js';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
-import { generateTokens } from '../../../../shared/utils/generateTokens.js';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
+import { generateTokens } from '../../../../shared/utils/generateTokens.js';
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
   constructor(
     @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
-
-    @inject(TYPES_AUTH_SESSION.ICreateAuthSessionUseCase)
-    private readonly createAuthSessionUseCase: ICreateAuthSessionUseCase,
 
     @inject(TYPES_AUTH.IEncryptService)
     private readonly encryptService: IEncryptService,
@@ -44,7 +44,7 @@ export class LoginUseCase implements ILoginUseCase {
     private readonly authSessionRepository: IAuthSessionRepository,
   ) {}
 
-  async execute(params: ILoginInputDTO): Promise<ILoginOutputDTO> {
+  async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
     const { email, password } = params;
 
     const user = await this.userRepository.findByEmail({ email });
@@ -74,12 +74,6 @@ export class LoginUseCase implements ILoginUseCase {
       authSessionId,
     );
 
-    await this.createAuthSessionUseCase.execute({
-      authSessionId,
-      user,
-      refreshToken,
-    });
-
     const refreshTokenHashed = await this.encryptService.hash(refreshToken);
     const expiresAtToken = await extractExpiresAtInToken(refreshToken);
 
@@ -95,6 +89,6 @@ export class LoginUseCase implements ILoginUseCase {
 
     await this.authSessionRepository.create(authSessionTmp);
 
-    return toDTO(user, accessToken, refreshToken);
+    return { accessToken, refreshToken };
   }
 }

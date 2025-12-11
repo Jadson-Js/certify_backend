@@ -1,8 +1,14 @@
-import type {
-  ISignupInputDTO,
-  ISignupOutputDTO,
-} from '../../../../infra/api/dtos/auth/ISignup.js';
+export interface ISignupInputUseCase {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface ISignupOutputUseCase {
+  id: string;
+  email: string;
+}
 
 export interface ISignupUseCase {
-  execute(params: ISignupInputDTO): Promise<ISignupOutputDTO>;
+  execute(params: ISignupInputUseCase): Promise<ISignupOutputUseCase>;
 }
