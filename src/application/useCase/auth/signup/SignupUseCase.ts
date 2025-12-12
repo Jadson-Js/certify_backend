@@ -1,5 +1,8 @@
 import { inject, injectable } from 'inversify';
-import { TYPES_AUTH, TYPES_USER } from '../../../../infra/container/types.js';
+import {
+  TYPES_SERVICE,
+  TYPES_USER,
+} from '../../../../infra/container/types.js';
 import type {
   ISignupInputUseCase,
   ISignupOutputUseCase,
@@ -7,7 +10,6 @@ import type {
 } from './ISignupUseCase.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import { toDTO } from './mapper.js';
 
 @injectable()
 export class SignupUseCase implements ISignupUseCase {
@@ -15,7 +17,7 @@ export class SignupUseCase implements ISignupUseCase {
     @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
 
-    @inject(TYPES_AUTH.IEncryptService)
+    @inject(TYPES_SERVICE.IEncryptService)
     private readonly encryptService: IEncryptService,
   ) {}
 
@@ -29,6 +31,6 @@ export class SignupUseCase implements ISignupUseCase {
       password_hash: hashPassword,
     });
 
-    return toDTO(user);
+    return user;
   }
 }

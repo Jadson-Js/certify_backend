@@ -1,5 +1,3 @@
-import type { ILoginInputDTO } from '../../../../infra/api/dtos/auth/ILogin.js';
-
 export interface ILoginInputUseCase {
   email: string;
   password: string;

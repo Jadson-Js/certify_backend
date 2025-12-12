@@ -6,7 +6,6 @@ export interface ISignupInputUseCase {
 
 export interface ISignupOutputUseCase {
   id: string;
-  email: string;
 }
 
 export interface ISignupUseCase {

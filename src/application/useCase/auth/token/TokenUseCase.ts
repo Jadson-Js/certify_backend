@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import {
-  TYPES_AUTH,
   TYPES_AUTH_SESSION,
+  TYPES_SERVICE,
   TYPES_USER,
 } from '../../../../infra/container/types.js';
 import type {
@@ -32,63 +32,49 @@ export class TokenUseCase implements ITokenUseCase {
     @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
     private readonly authSessionRepository: IAuthSessionRepository,
 
-    @inject(TYPES_AUTH.IEncryptService)
+    @inject(TYPES_SERVICE.IEncryptService)
     private readonly encryptService: IEncryptService,
 
-    @inject(TYPES_AUTH.IJwtService)
+    @inject(TYPES_SERVICE.IJwtService)
     private readonly jwtService: IJwtService,
   ) {}
 
   async execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase> {
-    // [CONCLUIDO] Verifica de refresh token é valido
-    // Verifica na table authSession se este token existe, se não foi expirado, não foi revogado, user foi verifiead
-    // deleta o authSession atual
-    // gera um novo refreshToken
-
     const decodedJwt = this.jwtService.verifyRefresh(params.refreshToken);
     if (!decodedJwt) throw new UnauthorizedError('Refresh token is not valid');
 
-    const authSession = await this.authSessionRepository.findById({
-      id: decodedJwt.auth_session_id as string,
-    });
+    const authSession = await this.authSessionRepository.findById(
+      decodedJwt.authSessionId as string,
+    );
     if (!authSession) throw new NotFoundError('Auth Session not found');
     if (new Date(authSession.expires_at) < new Date())
       throw new ConflictError('Auth Session expiried');
     if (authSession.revoked_at !== null)
       throw new UnauthorizedError('Auth Session is revoked');
 
-    await this.authSessionRepository.deleteById({ id: authSession.id });
+    await this.authSessionRepository.deleteById(authSession.id);
 
-    const user = await this.userRepository.findById({
-      id: authSession.user_id,
-    });
+    const user = await this.userRepository.findById(authSession.user_id);
     if (!user) throw new NotFoundError('User not found');
-    /*
-    if (user.verified_at == null)
-      throw new UnauthorizedError('The user is not verified');
-    // Validar se o User está bloqueado
-    */
+    // if (user.verified_at == null) throw new UnauthorizedError('The user is not verified');
 
     const accessToken = this.jwtService.generateAccessToken({
-      user_id: user?.id,
+      userId: user?.id,
     });
 
     const authSessionId = randomUUID();
     const refreshToken = this.jwtService.generateRefreshToken({
-      auth_session_id: authSessionId,
+      authSessionId,
     });
 
     const refreshTokenHashed = await this.encryptService.hash(refreshToken);
     const expiresAtToken = await extractExpiresAtInToken(refreshToken);
 
-    const authSessionTmp: IAuthSessionEntity = {
+    const authSessionTmp = {
       id: authSessionId,
       user_id: user.id,
       refresh_token_hash: refreshTokenHashed,
       expires_at: expiresAtToken,
-      revoked_at: null,
-      created_at: new Date(),
-      updated_at: new Date(),
     };
 
     await this.authSessionRepository.create(authSessionTmp);

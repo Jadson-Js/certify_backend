@@ -6,8 +6,8 @@ import type {
   ILoginUseCase,
 } from './ILoginUseCase.js';
 import {
-  TYPES_AUTH,
   TYPES_AUTH_SESSION,
+  TYPES_SERVICE,
   TYPES_USER,
 } from '../../../../infra/container/types.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
@@ -19,7 +19,6 @@ import type { IUserRepository } from '../../../../domain/repositories/IUserRepos
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
-import { generateTokens } from '../../../../shared/utils/generateTokens.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
 
 @injectable()
@@ -31,18 +30,19 @@ export class LoginUseCase implements ILoginUseCase {
     @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
     private readonly authSessionRepository: IAuthSessionRepository,
 
-    @inject(TYPES_AUTH.IJwtService)
+    @inject(TYPES_SERVICE.IJwtService)
     private readonly jwtService: IJwtService,
 
-    @inject(TYPES_AUTH.IEncryptService)
+    @inject(TYPES_SERVICE.IEncryptService)
     private readonly encryptService: IEncryptService,
   ) {}
 
   async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
     const { email, password } = params;
 
-    const user = await this.userRepository.findByEmail({ email });
+    const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundError(`User not found by email: ${email}`);
+    // if (!user.verified_at) throw new ConflictError("Email has not yet been verified.")
 
     const validPassword = await this.encryptService.compare(
       password,
@@ -50,31 +50,22 @@ export class LoginUseCase implements ILoginUseCase {
     );
     if (!validPassword) throw new UnauthorizedError('Invalid credentials');
 
-    /* 
-    if (!user.verified_at) {
-      throw new ConflictError("Email has not yet been verified.")
-    }
-    */
-
     const accessToken = this.jwtService.generateAccessToken({
-      user_id: user.id,
+      userId: user.id,
     });
 
     const authSessionId = randomUUID();
     const refreshToken = this.jwtService.generateRefreshToken({
-      auth_session_id: authSessionId,
+      authSessionId: authSessionId,
     });
     const refreshTokenHashed = await this.encryptService.hash(refreshToken);
     const expiresRefreshToken = await extractExpiresAtInToken(refreshToken);
 
-    const authSessionTmp: IAuthSessionEntity = {
+    const authSessionTmp = {
       id: authSessionId,
       user_id: user.id,
       refresh_token_hash: refreshTokenHashed,
       expires_at: expiresRefreshToken,
-      revoked_at: null,
-      created_at: new Date(),
-      updated_at: new Date(),
     };
 
     await this.authSessionRepository.create(authSessionTmp);
