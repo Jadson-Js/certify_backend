@@ -3,8 +3,14 @@ export interface ITokenInputUseCase {
 }
 
 export interface ITokenOutputUseCase {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: {
+    token: string;
+    expiresAt: Date;
+  };
+  refreshToken: {
+    token: string;
+    expiresAt: Date;
+  };
 }
 
 export interface ITokenUseCase {

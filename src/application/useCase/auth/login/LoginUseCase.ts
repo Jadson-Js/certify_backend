@@ -21,6 +21,7 @@ import type { IAuthSessionRepository } from '../../../../domain/repositories/IAu
 import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
 import type { IAuthTokenService } from '../../../../domain/services/ITokenService.js';
+import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
@@ -68,6 +69,30 @@ export class LoginUseCase implements ILoginUseCase {
       refreshToken,
     );
 
-    return { accessToken, refreshToken };
+    return this.mapper(accessToken, refreshToken, user);
+  }
+
+  private async mapper(
+    accessToken: string,
+    refreshToken: string,
+    user: IUserEntity,
+  ) {
+    const accessTokenExpiresAt = await extractExpiresAtInToken(accessToken);
+    const refreshTokenExpiresAt = await extractExpiresAtInToken(refreshToken);
+
+    return {
+      accessToken: {
+        token: accessToken,
+        expiresAt: accessTokenExpiresAt,
+      },
+      refreshToken: {
+        token: refreshToken,
+        expiresAt: refreshTokenExpiresAt,
+      },
+      user: {
+        id: user.id,
+        name: user.name,
+      },
+    };
   }
 }

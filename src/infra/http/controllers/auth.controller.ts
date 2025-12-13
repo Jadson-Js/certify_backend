@@ -7,7 +7,6 @@ import { ok } from '../../../shared/utils/helper.js';
 import type { ITokenUseCase } from '../../../application/useCase/auth/token/ITokenUseCase.js';
 import { signupPresenter } from '../../../application/presenters/auth/signupPresenter.js';
 import { loginPresenter } from '../../../application/presenters/auth/loginPresenter.js';
-import { tokenPresenter } from '../../../application/presenters/auth/tokenPresenter.js';
 
 @injectable()
 export class AuthController {
@@ -46,6 +45,18 @@ export class AuthController {
 
     const response = await this.loginUseCase.execute(input);
 
+    res.cookie('accessToken', response.accessToken.token, {
+      expires: response.accessToken.expiresAt,
+      httpOnly: true,
+      secure: false,
+    });
+
+    res.cookie('refreshToken', response.refreshToken.token, {
+      expires: response.refreshToken.expiresAt,
+      httpOnly: true,
+      secure: false,
+    });
+
     return ok(res, 200, loginPresenter(response));
   }
 
@@ -58,6 +69,18 @@ export class AuthController {
 
     const response = await this.tokenUseCase.execute(input);
 
-    return ok(res, 200, tokenPresenter(response));
+    res.cookie('accessToken', response.accessToken.token, {
+      expires: response.accessToken.expiresAt,
+      httpOnly: true,
+      secure: false,
+    });
+
+    res.cookie('refreshToken', response.refreshToken.token, {
+      expires: response.refreshToken.expiresAt,
+      httpOnly: true,
+      secure: false,
+    });
+
+    return ok(res, 200);
   }
 }

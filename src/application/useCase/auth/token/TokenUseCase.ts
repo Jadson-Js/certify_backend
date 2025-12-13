@@ -72,6 +72,22 @@ export class TokenUseCase implements ITokenUseCase {
       refreshToken,
     );
 
-    return { accessToken, refreshToken };
+    return this.mapper(accessToken, refreshToken);
+  }
+
+  private async mapper(accessToken: string, refreshToken: string) {
+    const accessTokenExpiresAt = await extractExpiresAtInToken(accessToken);
+    const refreshTokenExpiresAt = await extractExpiresAtInToken(refreshToken);
+
+    return {
+      accessToken: {
+        token: accessToken,
+        expiresAt: accessTokenExpiresAt,
+      },
+      refreshToken: {
+        token: refreshToken,
+        expiresAt: refreshTokenExpiresAt,
+      },
+    };
   }
 }

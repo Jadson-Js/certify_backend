@@ -4,8 +4,18 @@ export interface ILoginInputUseCase {
 }
 
 export interface ILoginOutputUseCase {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: {
+    token: string;
+    expiresAt: Date;
+  };
+  refreshToken: {
+    token: string;
+    expiresAt: Date;
+  };
+  user: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface ILoginUseCase {
