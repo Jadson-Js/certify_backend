@@ -2,8 +2,8 @@ import { ContainerModule } from 'inversify';
 import { LoginUseCase } from '../../../application/useCase/auth/login/LoginUseCase.js';
 import { SignupUseCase } from '../../../application/useCase/auth/signup/SignupUseCase.js';
 import { TYPES_AUTH } from '../types.js';
-import { AuthRoutes } from '../../api/routes/auth.route.js';
-import { AuthController } from '../../api/controllers/auth.controller.js';
+import { AuthRoutes } from '../../http/routes/auth.route.js';
+import { AuthController } from '../../http/controllers/auth.controller.js';
 import { TokenUseCase } from '../../../application/useCase/auth/token/TokenUseCase.js';
 
 export const authModule = new ContainerModule((container) => {

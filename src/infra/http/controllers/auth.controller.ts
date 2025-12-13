@@ -5,10 +5,9 @@ import type { ILoginUseCase } from '../../../application/useCase/auth/login/ILog
 import type { Request, Response } from 'express';
 import { ok } from '../../../shared/utils/helper.js';
 import type { ITokenUseCase } from '../../../application/useCase/auth/token/ITokenUseCase.js';
-import type {
-  ISignupInputDTO,
-  ISignupOutputDTO,
-} from '../dtos/auth/ISignup.js';
+import { signupPresenter } from '../../../application/presenters/auth/signupPresenter.js';
+import { loginPresenter } from '../../../application/presenters/auth/loginPresenter.js';
+import { tokenPresenter } from '../../../application/presenters/auth/tokenPresenter.js';
 
 @injectable()
 export class AuthController {
@@ -26,7 +25,7 @@ export class AuthController {
   async signup(req: Request, res: Response) {
     const data = req.body;
 
-    const input: ISignupInputDTO = {
+    const input = {
       name: data.name,
       email: data.email,
       password: data.password,
@@ -34,7 +33,7 @@ export class AuthController {
 
     const response = await this.signupUseCase.execute(input);
 
-    return ok(res, 201, response);
+    return ok(res, 201, signupPresenter(response));
   }
 
   async login(req: Request, res: Response) {
@@ -47,7 +46,7 @@ export class AuthController {
 
     const response = await this.loginUseCase.execute(input);
 
-    return ok(res, 200, response);
+    return ok(res, 200, loginPresenter(response));
   }
 
   async token(req: Request, res: Response) {
@@ -59,6 +58,6 @@ export class AuthController {
 
     const response = await this.tokenUseCase.execute(input);
 
-    return ok(res, 200, response);
+    return ok(res, 200, tokenPresenter(response));
   }
 }
