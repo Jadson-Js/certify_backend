@@ -5,9 +5,11 @@ import type { IJwtService } from '../../domain/services/IJwtService.js';
 import type { IEncryptService } from '../../domain/services/IEncryptService.js';
 import { randomUUID } from 'crypto';
 import { extractExpiresAtInToken } from '../../shared/utils/extractExpiresAtInToken.js';
+import type { IAuthSessionEntity } from '../../domain/entities/authSession.entity.js';
+import type { IAuthTokenService } from '../../domain/services/ITokenService.js';
 
 @injectable()
-export class AuthTokenService {
+export class AuthTokenService implements IAuthTokenService {
   constructor(
     @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
     private readonly authSessionRepository: IAuthSessionRepository,
@@ -23,7 +25,7 @@ export class AuthTokenService {
     userId: string,
     authSessionId: string,
     refreshToken: string,
-  ) {
+  ): Promise<IAuthSessionEntity> {
     const refreshTokenHashed = await this.encryptService.hash(refreshToken);
     const expiresAtToken = await extractExpiresAtInToken(refreshToken);
 
@@ -34,6 +36,6 @@ export class AuthTokenService {
       expires_at: expiresAtToken,
     };
 
-    await this.authSessionRepository.create(authSessionTmp);
+    return await this.authSessionRepository.create(authSessionTmp);
   }
 }

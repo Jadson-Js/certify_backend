@@ -51,8 +51,6 @@ export class TokenUseCase implements ITokenUseCase {
     if (!authSession) throw new NotFoundError('Auth Session not found');
     if (new Date(authSession.expires_at) < new Date())
       throw new ConflictError('Auth Session expiried');
-    if (authSession.revoked_at !== null)
-      throw new UnauthorizedError('Auth Session is revoked');
 
     await this.authSessionRepository.deleteById(authSession.id);
 
