@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import type { Container } from 'inversify';
-import { TYPES_AUTH, TYPES_USER } from '../../container/types.js';
+import { TYPES_AUTH } from '../../container/types.js';
 import type { AuthRoutes } from './auth.route.js';
 
 export function setupRoutes(container: Container) {

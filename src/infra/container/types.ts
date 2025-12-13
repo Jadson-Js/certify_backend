@@ -8,6 +8,7 @@ export const TYPES_AUTH = {
   ISignupUseCase: Symbol.for('ISignupUseCase'),
   ILoginUseCase: Symbol.for('ILoginUseCase'),
   ITokenUseCase: Symbol.for('ITokenUseCase'),
+  ILogoutUseCase: Symbol.for('ILogoutUseCase'),
 
   // Controllers
   AuthController: Symbol.for('AuthController'),
@@ -25,4 +26,8 @@ export const TYPES_SERVICE = {
   IJwtService: Symbol.for('IJwtService'),
   IEncryptService: Symbol.for('IEncryptService'),
   IAuthTokenService: Symbol.for('IAuthTokenService'),
+};
+
+export const TYPES_MIDDLEWARE = {
+  IEnsureAuthenticated: Symbol.for('IEnsureAuthenticated'),
 };

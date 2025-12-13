@@ -5,6 +5,7 @@ import { TYPES_AUTH } from '../types.js';
 import { AuthRoutes } from '../../http/routes/auth.route.js';
 import { AuthController } from '../../http/controllers/auth.controller.js';
 import { TokenUseCase } from '../../../application/useCase/auth/token/TokenUseCase.js';
+import { LogoutUseCase } from '../../../application/useCase/auth/logout/LogoutUseCase.js';
 
 export const authModule = new ContainerModule((container) => {
   // USE_CASES
@@ -14,6 +15,10 @@ export const authModule = new ContainerModule((container) => {
     .inSingletonScope();
   container.bind(TYPES_AUTH.ILoginUseCase).to(LoginUseCase).inSingletonScope();
   container.bind(TYPES_AUTH.ITokenUseCase).to(TokenUseCase).inSingletonScope();
+  container
+    .bind(TYPES_AUTH.ILogoutUseCase)
+    .to(LogoutUseCase)
+    .inSingletonScope();
 
   // CONTROLLERS
   container

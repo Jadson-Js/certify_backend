@@ -18,7 +18,6 @@ import {
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
-import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
 import type { IAuthTokenService } from '../../../../domain/services/ITokenService.js';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';

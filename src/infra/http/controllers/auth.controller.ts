@@ -7,6 +7,7 @@ import { ok } from '../../../shared/utils/helper.js';
 import type { ITokenUseCase } from '../../../application/useCase/auth/token/ITokenUseCase.js';
 import { signupPresenter } from '../../../application/presenters/auth/signupPresenter.js';
 import { loginPresenter } from '../../../application/presenters/auth/loginPresenter.js';
+import type { ILogoutUseCase } from '../../../application/useCase/auth/logout/ILogoutUseCase.js';
 
 @injectable()
 export class AuthController {
@@ -19,6 +20,9 @@ export class AuthController {
 
     @inject(TYPES_AUTH.ITokenUseCase)
     private readonly tokenUseCase: ITokenUseCase,
+
+    @inject(TYPES_AUTH.ILogoutUseCase)
+    private readonly logoutUseCase: ILogoutUseCase,
   ) {}
 
   async signup(req: Request, res: Response) {
@@ -80,6 +84,22 @@ export class AuthController {
       httpOnly: true,
       secure: false,
     });
+
+    return ok(res, 200);
+  }
+
+  async logout(req: Request, res: Response) {
+    const { id } = req.authSession;
+
+    await this.logoutUseCase.execute({ authSessionId: id });
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: false,
+    };
+
+    res.clearCookie('accessToken', cookieOptions);
+    res.clearCookie('refreshToken', cookieOptions);
 
     return ok(res, 200);
   }

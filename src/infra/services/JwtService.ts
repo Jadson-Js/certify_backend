@@ -5,7 +5,9 @@ import {
   UnauthorizedError,
 } from '../../shared/error/AppError.js';
 import type { IJwtService } from '../../domain/services/IJwtService.js';
+import { injectable } from 'inversify';
 
+@injectable()
 export class JwtService implements IJwtService {
   private readonly JWT_ACCESS_SECRET = env.JWT_ACCESS_SECRET;
   private readonly JWT_ACCESS_EXPIRES = '1d';

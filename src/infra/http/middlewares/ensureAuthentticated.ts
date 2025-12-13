@@ -1,21 +1,45 @@
 import type { NextFunction, Request, Response } from 'express';
 import { UnauthorizedError } from '../../../shared/error/AppError.js';
 import { JwtService } from '../../services/JwtService.js';
+import { inject, injectable } from 'inversify';
+import { TYPES_SERVICE } from '../../container/types.js';
+import type { IJwtService } from '../../../domain/services/IJwtService.js';
 
-export function ensureAuthenticated(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) throw new UnauthorizedError('Missing authorization header');
+export interface IEnsureAuthenticated {
+  authRefresh(req: Request, res: Response, next: NextFunction): null;
+  authAccess(req: Request, res: Response, next: NextFunction): null;
+}
 
-  const token = authHeader.split(' ')[1];
-  if (!token) throw new UnauthorizedError('Missing authorization header');
+@injectable()
+export class EnsureAuthenticated implements IEnsureAuthenticated {
+  constructor(
+    @inject(TYPES_SERVICE.IJwtService)
+    private readonly jwtService: IJwtService,
+  ) {}
 
-  const jwtService = new JwtService();
-  const decoded = jwtService.verifyAccess(token);
+  authRefresh(req: Request, res: Response, next: NextFunction): null {
+    const token = req.cookies.refreshToken;
+    if (!token) throw new UnauthorizedError('Missing refresh token in cookies');
 
-  req.user = { id: decoded.id as string };
-  next();
+    const decoded = this.jwtService.verifyRefresh(token);
+
+    req.authSession = { id: decoded.authSessionId as string };
+    next();
+    return null;
+  }
+
+  authAccess(req: Request, res: Response, next: NextFunction): null {
+    const authHeader = req.headers.authorization;
+    if (!authHeader)
+      throw new UnauthorizedError('Missing authorization header');
+
+    const token = authHeader.split(' ')[1];
+    if (!token) throw new UnauthorizedError('Missing authorization header');
+    const jwtService = new JwtService();
+    const decoded = this.jwtService.verifyAccess(token);
+
+    req.user = { id: decoded.id as string };
+    next();
+    return null;
+  }
 }

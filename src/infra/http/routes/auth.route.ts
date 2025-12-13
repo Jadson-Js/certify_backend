@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { TYPES_AUTH } from '../../container/types.js';
+import { TYPES_AUTH, TYPES_MIDDLEWARE } from '../../container/types.js';
 import type { AuthController } from '../controllers/auth.controller.js';
 import { Router } from 'express';
 import {
@@ -8,12 +8,16 @@ import {
   tokenSchema,
 } from '../middlewares/zod/auth.schema.js';
 import { validate } from '../middlewares/validate.js';
+import { type IEnsureAuthenticated } from '../middlewares/ensureAuthentticated.js';
 
 @injectable()
 export class AuthRoutes {
   constructor(
     @inject(TYPES_AUTH.AuthController)
     private readonly authController: AuthController,
+
+    @inject(TYPES_MIDDLEWARE.IEnsureAuthenticated)
+    private readonly ensureAuthenticated: IEnsureAuthenticated,
   ) {}
 
   execute() {
@@ -35,6 +39,12 @@ export class AuthRoutes {
       '/token',
       validate(tokenSchema, 'body'),
       this.authController.token.bind(this.authController),
+    );
+
+    router.post(
+      '/logout',
+      this.ensureAuthenticated.authRefresh.bind(this.ensureAuthenticated),
+      this.authController.logout.bind(this.authController),
     );
 
     return router;
