@@ -20,6 +20,7 @@ import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpires
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
+import type { IAuthTokenService } from '../../../../domain/services/ITokenService.js';
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
@@ -35,6 +36,9 @@ export class LoginUseCase implements ILoginUseCase {
 
     @inject(TYPES_SERVICE.IEncryptService)
     private readonly encryptService: IEncryptService,
+
+    @inject(TYPES_SERVICE.IAuthTokenService)
+    private readonly authTokenService: IAuthTokenService,
   ) {}
 
   async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
@@ -50,25 +54,19 @@ export class LoginUseCase implements ILoginUseCase {
     );
     if (!validPassword) throw new UnauthorizedError('Invalid credentials');
 
+    const authSessionId = randomUUID();
     const accessToken = this.jwtService.generateAccessToken({
       userId: user.id,
     });
-
-    const authSessionId = randomUUID();
     const refreshToken = this.jwtService.generateRefreshToken({
       authSessionId: authSessionId,
     });
-    const refreshTokenHashed = await this.encryptService.hash(refreshToken);
-    const expiresRefreshToken = await extractExpiresAtInToken(refreshToken);
 
-    const authSessionTmp = {
-      id: authSessionId,
-      user_id: user.id,
-      refresh_token_hash: refreshTokenHashed,
-      expires_at: expiresRefreshToken,
-    };
-
-    await this.authSessionRepository.create(authSessionTmp);
+    await this.authTokenService.createAuthSession(
+      user.id,
+      authSessionId,
+      refreshToken,
+    );
 
     return { accessToken, refreshToken };
   }

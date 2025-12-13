@@ -16,12 +16,11 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from '../../../../shared/error/AppError.js';
-import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
-import type { IFindUserByIdUseCase } from '../../users/findById/IFindByIdUseCase.js';
 import { randomUUID } from 'crypto';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
+import type { IAuthTokenService } from '../../../../domain/services/ITokenService.js';
 
 @injectable()
 export class TokenUseCase implements ITokenUseCase {
@@ -37,6 +36,9 @@ export class TokenUseCase implements ITokenUseCase {
 
     @inject(TYPES_SERVICE.IJwtService)
     private readonly jwtService: IJwtService,
+
+    @inject(TYPES_SERVICE.IAuthTokenService)
+    private readonly authTokenService: IAuthTokenService,
   ) {}
 
   async execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase> {
@@ -58,26 +60,19 @@ export class TokenUseCase implements ITokenUseCase {
     if (!user) throw new NotFoundError('User not found');
     // if (user.verified_at == null) throw new UnauthorizedError('The user is not verified');
 
+    const authSessionId = randomUUID();
     const accessToken = this.jwtService.generateAccessToken({
       userId: user?.id,
     });
-
-    const authSessionId = randomUUID();
     const refreshToken = this.jwtService.generateRefreshToken({
       authSessionId,
     });
 
-    const refreshTokenHashed = await this.encryptService.hash(refreshToken);
-    const expiresAtToken = await extractExpiresAtInToken(refreshToken);
-
-    const authSessionTmp = {
-      id: authSessionId,
-      user_id: user.id,
-      refresh_token_hash: refreshTokenHashed,
-      expires_at: expiresAtToken,
-    };
-
-    await this.authSessionRepository.create(authSessionTmp);
+    await this.authTokenService.createAuthSession(
+      user.id,
+      authSessionId,
+      refreshToken,
+    );
 
     return { accessToken, refreshToken };
   }
