@@ -32,9 +32,9 @@ export class AuthController {
       password: data.password,
     };
 
-    const response: ISignupOutputDTO = await this.signupUseCase.execute(input);
+    const response = await this.signupUseCase.execute(input);
 
-    return ok(res, 201, 'Signup successfully', response);
+    return ok(res, 201, response);
   }
 
   async login(req: Request, res: Response) {
@@ -47,7 +47,7 @@ export class AuthController {
 
     const response = await this.loginUseCase.execute(input);
 
-    return ok(res, 200, 'Login successfully', response);
+    return ok(res, 200, response);
   }
 
   async token(req: Request, res: Response) {
@@ -59,6 +59,6 @@ export class AuthController {
 
     const response = await this.tokenUseCase.execute(input);
 
-    return ok(res, 200, 'Token successfully', response);
+    return ok(res, 200, response);
   }
 }

@@ -14,9 +14,7 @@ export const errorHandler = (
   console.error('[Error in application]', error.stack);
 
   if (error instanceof AppError) {
-    return res
-      .status(error.statusCode)
-      .json({ status: 'error', message: error.message });
+    return res.status(error.statusCode).json({ message: error.message });
   }
 
   if (error instanceof PrismaClientKnownRequestError) {
@@ -26,21 +24,19 @@ export const errorHandler = (
         ? `The field '${target.join(', ')}' is already in use.`
         : 'Unique constraint violation.';
 
-      return res.status(409).json({ status: 'error', message: message });
+      return res.status(409).json({ message: message });
     }
 
     if (error.code === 'P2025') {
       return res.status(404).json({
-        status: 'error',
         message: 'The resource you tried to modify does not exist.',
       });
     }
   } else if (error instanceof PrismaClientValidationError) {
     return res.status(400).json({
-      status: 'error',
       message: 'Invalid data. Please check the required fields.',
     });
   }
 
-  res.status(500).json({ error: 'Internal Server Error' });
+  res.status(500).json({ message: 'Internal Server Error' });
 };
