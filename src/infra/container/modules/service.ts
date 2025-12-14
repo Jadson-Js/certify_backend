@@ -2,7 +2,7 @@ import { ContainerModule } from 'inversify';
 import { TYPES_SERVICE } from '../types.js';
 import { JwtService } from '../../services/JwtService.js';
 import { EncryptService } from '../../services/EncryptService.js';
-import { AuthTokenService } from '../../services/AuthTokenService.js';
+import { AuthSessionService } from '../../services/AuthTokenService.js';
 
 export const serviceModule = new ContainerModule((container) => {
   container.bind(TYPES_SERVICE.IJwtService).to(JwtService).inSingletonScope();
@@ -12,6 +12,6 @@ export const serviceModule = new ContainerModule((container) => {
     .inSingletonScope();
   container
     .bind(TYPES_SERVICE.IAuthTokenService)
-    .to(AuthTokenService)
+    .to(AuthSessionService)
     .inSingletonScope();
 });

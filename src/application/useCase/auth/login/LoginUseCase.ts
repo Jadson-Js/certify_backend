@@ -19,7 +19,7 @@ import type { IUserRepository } from '../../../../domain/repositories/IUserRepos
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
-import type { IAuthTokenService } from '../../../../domain/services/ITokenService.js';
+import type { IAuthTokenService } from '../../../../domain/services/IAuthSessionService.js';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 
 @injectable()

@@ -3,13 +3,12 @@ import { TYPES_AUTH_SESSION, TYPES_SERVICE } from '../container/types.js';
 import type { IAuthSessionRepository } from '../../domain/repositories/IAuthSessionRepository.js';
 import type { IJwtService } from '../../domain/services/IJwtService.js';
 import type { IEncryptService } from '../../domain/services/IEncryptService.js';
-import { randomUUID } from 'crypto';
 import { extractExpiresAtInToken } from '../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionEntity } from '../../domain/entities/authSession.entity.js';
-import type { IAuthTokenService } from '../../domain/services/ITokenService.js';
+import type { IAuthSessionService } from '../../domain/services/IAuthSessionService.js';
 
 @injectable()
-export class AuthTokenService implements IAuthTokenService {
+export class AuthSessionService implements IAuthSessionService {
   constructor(
     @inject(TYPES_AUTH_SESSION.IAuthSessionRepository)
     private readonly authSessionRepository: IAuthSessionRepository,
@@ -21,7 +20,7 @@ export class AuthTokenService implements IAuthTokenService {
     private readonly encryptService: IEncryptService,
   ) {}
 
-  async createAuthSession(
+  async create(
     userId: string,
     authSessionId: string,
     refreshToken: string,
