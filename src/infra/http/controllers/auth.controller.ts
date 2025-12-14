@@ -65,13 +65,9 @@ export class AuthController {
   }
 
   async token(req: Request, res: Response) {
-    const data = req.body;
+    const { id } = req.authSession;
 
-    const input = {
-      refreshToken: data.refreshToken,
-    };
-
-    const response = await this.tokenUseCase.execute(input);
+    const response = await this.tokenUseCase.execute({ authSessionId: id });
 
     res.cookie('accessToken', response.accessToken.token, {
       expires: response.accessToken.expiresAt,

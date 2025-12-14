@@ -37,7 +37,7 @@ export class AuthRoutes {
 
     router.post(
       '/token',
-      validate(tokenSchema, 'body'),
+      this.ensureAuthenticated.authRefresh.bind(this.ensureAuthenticated),
       this.authController.token.bind(this.authController),
     );
 

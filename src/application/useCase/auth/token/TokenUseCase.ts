@@ -42,16 +42,12 @@ export class TokenUseCase implements ITokenUseCase {
   ) {}
 
   async execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase> {
-    const decodedJwt = this.jwtService.verifyRefresh(params.refreshToken);
-    if (!decodedJwt) throw new UnauthorizedError('Refresh token is not valid');
-
     const authSession = await this.authSessionRepository.findById(
-      decodedJwt.authSessionId as string,
+      params.authSessionId,
     );
     if (!authSession) throw new NotFoundError('Auth Session not found');
     if (new Date(authSession.expires_at) < new Date())
       throw new ConflictError('Auth Session expiried');
-
     await this.authSessionRepository.deleteById(authSession.id);
 
     const user = await this.userRepository.findById(authSession.user_id);
@@ -60,7 +56,7 @@ export class TokenUseCase implements ITokenUseCase {
 
     const authSessionId = randomUUID();
     const accessToken = this.jwtService.generateAccessToken({
-      userId: user?.id,
+      userId: user.id,
     });
     const refreshToken = this.jwtService.generateRefreshToken({
       authSessionId,

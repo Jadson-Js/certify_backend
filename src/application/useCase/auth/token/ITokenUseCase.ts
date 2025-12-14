@@ -1,5 +1,5 @@
 export interface ITokenInputUseCase {
-  refreshToken: string;
+  authSessionId: string;
 }
 
 export interface ITokenOutputUseCase {
