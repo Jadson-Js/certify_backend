@@ -19,7 +19,7 @@ import type { IUserRepository } from '../../../../domain/repositories/IUserRepos
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
-import type { IAuthTokenService } from '../../../../domain/services/IAuthSessionService.js';
+import type { IAuthSessionService } from '../../../../domain/services/IAuthSessionService.js';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 
 @injectable()
@@ -37,8 +37,8 @@ export class LoginUseCase implements ILoginUseCase {
     @inject(TYPES_SERVICE.IEncryptService)
     private readonly encryptService: IEncryptService,
 
-    @inject(TYPES_SERVICE.IAuthTokenService)
-    private readonly authTokenService: IAuthTokenService,
+    @inject(TYPES_SERVICE.IAuthSessionService)
+    private readonly authSessionService: IAuthSessionService,
   ) {}
 
   async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
@@ -47,6 +47,7 @@ export class LoginUseCase implements ILoginUseCase {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundError(`User not found by email: ${email}`);
     // if (!user.verified_at) throw new ConflictError("Email has not yet been verified.")
+    // if (user.suspended_at) throw new ConflictError("User has been suspended.")
 
     const validPassword = await this.encryptService.compare(
       password,
@@ -62,13 +63,10 @@ export class LoginUseCase implements ILoginUseCase {
       authSessionId: authSessionId,
     });
 
-    await this.authTokenService.createAuthSession(
-      user.id,
-      authSessionId,
-      refreshToken,
-    );
+    await this.authSessionService.create(user.id, authSessionId, refreshToken);
 
-    return this.mapper(accessToken, refreshToken, user);
+    const response = this.mapper(accessToken, refreshToken, user);
+    return response;
   }
 
   private async mapper(

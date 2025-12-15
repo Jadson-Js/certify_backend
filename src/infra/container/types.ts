@@ -25,7 +25,7 @@ export const TYPES_AUTH_SESSION = {
 export const TYPES_SERVICE = {
   IJwtService: Symbol.for('IJwtService'),
   IEncryptService: Symbol.for('IEncryptService'),
-  IAuthTokenService: Symbol.for('IAuthTokenService'),
+  IAuthSessionService: Symbol.for('IAuthSessionService'),
 };
 
 export const TYPES_MIDDLEWARE = {

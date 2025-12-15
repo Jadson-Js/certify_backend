@@ -4,6 +4,7 @@ export interface IUserEntity {
   email: string;
   password_hash: string;
   verified_at: Date | null;
+  suspended_at: Date | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -15,6 +16,7 @@ export class UserEntity implements IUserEntity {
     private readonly _email: string,
     private readonly _password_hash: string,
     private readonly _verified_at: Date | null,
+    private readonly _suspended_at: Date | null,
     private readonly _created_at: Date,
     private readonly _updated_at: Date,
   ) {}
@@ -37,6 +39,10 @@ export class UserEntity implements IUserEntity {
 
   get verified_at(): Date | null {
     return this._verified_at;
+  }
+
+  get suspended_at(): Date | null {
+    return this._suspended_at;
   }
 
   get created_at(): Date {

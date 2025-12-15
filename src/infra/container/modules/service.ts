@@ -11,7 +11,7 @@ export const serviceModule = new ContainerModule((container) => {
     .to(EncryptService)
     .inSingletonScope();
   container
-    .bind(TYPES_SERVICE.IAuthTokenService)
+    .bind(TYPES_SERVICE.IAuthSessionService)
     .to(AuthSessionService)
     .inSingletonScope();
 });

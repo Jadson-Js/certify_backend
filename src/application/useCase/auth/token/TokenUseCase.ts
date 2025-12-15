@@ -20,7 +20,7 @@ import { randomUUID } from 'crypto';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import type { IAuthTokenService } from '../../../../domain/services/IAuthSessionService.js';
+import type { IAuthSessionService } from '../../../../domain/services/IAuthSessionService.js';
 
 @injectable()
 export class TokenUseCase implements ITokenUseCase {
@@ -37,8 +37,8 @@ export class TokenUseCase implements ITokenUseCase {
     @inject(TYPES_SERVICE.IJwtService)
     private readonly jwtService: IJwtService,
 
-    @inject(TYPES_SERVICE.IAuthTokenService)
-    private readonly authTokenService: IAuthTokenService,
+    @inject(TYPES_SERVICE.IAuthSessionService)
+    private readonly authSessionService: IAuthSessionService,
   ) {}
 
   async execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase> {
@@ -53,6 +53,7 @@ export class TokenUseCase implements ITokenUseCase {
     const user = await this.userRepository.findById(authSession.user_id);
     if (!user) throw new NotFoundError('User not found');
     // if (user.verified_at == null) throw new UnauthorizedError('The user is not verified');
+    // if (user.suspended_at) throw new ConflictError("User has been suspended.")
 
     const authSessionId = randomUUID();
     const accessToken = this.jwtService.generateAccessToken({
@@ -62,13 +63,10 @@ export class TokenUseCase implements ITokenUseCase {
       authSessionId,
     });
 
-    await this.authTokenService.createAuthSession(
-      user.id,
-      authSessionId,
-      refreshToken,
-    );
+    await this.authSessionService.create(user.id, authSessionId, refreshToken);
 
-    return this.mapper(accessToken, refreshToken);
+    const response = this.mapper(accessToken, refreshToken);
+    return response;
   }
 
   private async mapper(accessToken: string, refreshToken: string) {
