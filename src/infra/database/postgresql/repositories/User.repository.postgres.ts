@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 import type {
   ICreateUserInputRepository,
+  IUpdateUserSuspendedAtInputRepository,
   IUserRepository,
 } from '../../../../domain/repositories/IUserRepository.js';
 import { prisma } from '../../../../../prisma/prisma.js';
@@ -31,6 +32,21 @@ export class UserRepositoryPostgres implements IUserRepository {
   async create(params: ICreateUserInputRepository): Promise<IUserEntity> {
     const user = await prisma.user.create({
       data: params,
+    });
+
+    return user;
+  }
+
+  async updateSuspendedAtById(
+    params: IUpdateUserSuspendedAtInputRepository,
+  ): Promise<IUserEntity> {
+    const user = await prisma.user.update({
+      data: {
+        suspended_at: params.suspended_at,
+      },
+      where: {
+        id: params.id,
+      },
     });
 
     return user;

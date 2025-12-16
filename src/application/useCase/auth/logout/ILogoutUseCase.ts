@@ -3,5 +3,5 @@ export interface ILogoutInputUseCase {
 }
 
 export interface ILogoutUseCase {
-  execute(params: ILogoutInputUseCase): Promise<null>;
+  execute(params: ILogoutInputUseCase): Promise<void>;
 }

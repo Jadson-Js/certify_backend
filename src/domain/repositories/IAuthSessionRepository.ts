@@ -12,4 +12,5 @@ export interface IAuthSessionRepository {
     params: ICreateAuthSessionInputRepository,
   ): Promise<IAuthSessionEntity>;
   deleteById(id: string): Promise<null>;
+  deleteByUserId(userId: string): Promise<null>;
 }

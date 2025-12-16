@@ -1,4 +1,4 @@
-import { AuthSessionRepositoryPostgres } from '../../database/postgresql/repositories/authSession.repository.postgres.js';
+import { AuthSessionRepositoryPostgres } from '../../database/postgresql/repositories/AuthSession.repository.postgres.js';
 import { TYPES_AUTH_SESSION } from '../types.js';
 import { ContainerModule } from 'inversify';
 

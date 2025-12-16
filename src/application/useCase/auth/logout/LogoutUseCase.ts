@@ -10,9 +10,7 @@ export class LogoutUseCase implements ILogoutUseCase {
     private readonly authSessionRepository: IAuthSessionRepository,
   ) {}
 
-  async execute(params: ILogoutInputUseCase): Promise<null> {
+  async execute(params: ILogoutInputUseCase): Promise<void> {
     await this.authSessionRepository.deleteById(params.authSessionId);
-
-    return null;
   }
 }

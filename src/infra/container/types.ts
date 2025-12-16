@@ -1,6 +1,15 @@
 export const TYPES_USER = {
   // Repositories
   IUserRepository: Symbol.for('IUserRepository'),
+
+  // UseCase
+  ISuspendUserUseCase: Symbol.for('ISuspendUserUseCase'),
+
+  // Controllers
+  IUserController: Symbol.for('IUserController'),
+
+  // Routes
+  UserRoutes: Symbol.for('UserRoutes'),
 };
 
 export const TYPES_AUTH = {
@@ -20,6 +29,11 @@ export const TYPES_AUTH = {
 export const TYPES_AUTH_SESSION = {
   // Repositories
   IAuthSessionRepository: Symbol.for('IAuthSessionRepository'),
+};
+
+export const TYPES_USER_SUSPENSION = {
+  // Repositories
+  IUserSuspensionRepository: Symbol.for('IUserSuspensionRepository'),
 };
 
 export const TYPES_SERVICE = {

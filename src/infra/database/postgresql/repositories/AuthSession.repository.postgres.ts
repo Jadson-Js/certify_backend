@@ -28,4 +28,12 @@ export class AuthSessionRepositoryPostgres implements IAuthSessionRepository {
 
     return null;
   }
+
+  async deleteByUserId(userId: string): Promise<null> {
+    await prisma.authSession.deleteMany({
+      where: { user_id: userId },
+    });
+
+    return null;
+  }
 }
