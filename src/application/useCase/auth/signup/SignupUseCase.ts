@@ -19,7 +19,7 @@ export class SignupUseCase implements ISignupUseCase {
 
     @inject(TYPES_SERVICE.IEncryptService)
     private readonly encryptService: IEncryptService,
-  ) {}
+  ) { }
 
   async execute(params: ISignupInputUseCase): Promise<ISignupOutputUseCase> {
     const { name, email, password } = params;
@@ -28,7 +28,7 @@ export class SignupUseCase implements ISignupUseCase {
     const user = await this.userRepository.create({
       name,
       email,
-      password_hash: hashPassword,
+      passwordHash: hashPassword,
     });
 
     return user;

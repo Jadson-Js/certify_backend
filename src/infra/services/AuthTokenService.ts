@@ -18,7 +18,7 @@ export class AuthSessionService implements IAuthSessionService {
 
     @inject(TYPES_SERVICE.IEncryptService)
     private readonly encryptService: IEncryptService,
-  ) {}
+  ) { }
 
   async create(
     userId: string,
@@ -30,9 +30,11 @@ export class AuthSessionService implements IAuthSessionService {
 
     const authSessionTmp = {
       id: authSessionId,
-      user_id: userId,
-      refresh_token_hash: refreshTokenHashed,
-      expires_at: expiresAtToken,
+      userId: userId,
+      refreshTokenHash: refreshTokenHashed,
+      expiresAt: expiresAtToken,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     return await this.authSessionRepository.create(authSessionTmp);

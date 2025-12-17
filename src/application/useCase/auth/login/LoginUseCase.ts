@@ -39,19 +39,19 @@ export class LoginUseCase implements ILoginUseCase {
 
     @inject(TYPES_SERVICE.IAuthSessionService)
     private readonly authSessionService: IAuthSessionService,
-  ) {}
+  ) { }
 
   async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
     const { email, password } = params;
 
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundError(`User not found by email: ${email}`);
-    // if (!user.verified_at) throw new ConflictError("Email has not yet been verified.")
-    // if (user.suspended_at) throw new ConflictError("User has been suspended.")
+    // if (!user.verifiedAt) throw new ConflictError("Email has not yet been verified.")
+    // if (user.suspendedAt) throw new ConflictError("User has been suspended.")
 
     const validPassword = await this.encryptService.compare(
       password,
-      user.password_hash,
+      user.passwordHash,
     );
     if (!validPassword) throw new UnauthorizedError('Invalid credentials');
 

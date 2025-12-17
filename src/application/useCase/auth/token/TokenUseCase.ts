@@ -39,21 +39,21 @@ export class TokenUseCase implements ITokenUseCase {
 
     @inject(TYPES_SERVICE.IAuthSessionService)
     private readonly authSessionService: IAuthSessionService,
-  ) {}
+  ) { }
 
   async execute(params: ITokenInputUseCase): Promise<ITokenOutputUseCase> {
     const authSession = await this.authSessionRepository.findById(
       params.authSessionId,
     );
     if (!authSession) throw new NotFoundError('Auth Session not found');
-    if (new Date(authSession.expires_at) < new Date())
+    if (new Date(authSession.expiresAt) < new Date())
       throw new ConflictError('Auth Session expiried');
     await this.authSessionRepository.deleteById(authSession.id);
 
-    const user = await this.userRepository.findById(authSession.user_id);
+    const user = await this.userRepository.findById(authSession.userId);
     if (!user) throw new NotFoundError('User not found');
-    // if (user.verified_at == null) throw new UnauthorizedError('The user is not verified');
-    // if (user.suspended_at) throw new ConflictError("User has been suspended.")
+    // if (user.verifiedAt == null) throw new UnauthorizedError('The user is not verified');
+    // if (user.suspendedAt) throw new ConflictError("User has been suspended.")
 
     const authSessionId = randomUUID();
     const accessToken = this.jwtService.generateAccessToken({

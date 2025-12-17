@@ -1,48 +1,48 @@
 export interface IAuthSessionEntity {
   id: string;
-  user_id: string;
-  refresh_token_hash: string;
-  expires_at: Date;
-  created_at: Date;
-  updated_at: Date;
+  userId: string;
+  refreshTokenHash: string;
+  expiresAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class AuthSessionEntity implements IAuthSessionEntity {
   constructor(
     private readonly _id: string,
-    private readonly _user_id: string,
-    private readonly _refresh_token_hash: string,
-    private readonly _expires_at: Date,
-    private readonly _revoked_at: Date | null,
-    private readonly _created_at: Date,
-    private readonly _updated_at: Date,
+    private readonly _userId: string,
+    private readonly _refreshTokenHash: string,
+    private readonly _expiresAt: Date,
+    private readonly _revokedAt: Date | null,
+    private readonly _createdAt: Date,
+    private readonly _updatedAt: Date,
   ) {}
 
   get id(): string {
     return this._id;
   }
 
-  get user_id(): string {
-    return this._user_id;
+  get userId(): string {
+    return this._userId;
   }
 
-  get refresh_token_hash(): string {
-    return this._refresh_token_hash;
+  get refreshTokenHash(): string {
+    return this._refreshTokenHash;
   }
 
-  get expires_at(): Date {
-    return this._expires_at;
+  get expiresAt(): Date {
+    return this._expiresAt;
   }
 
-  get revoked_at(): Date | null {
-    return this._revoked_at;
+  get revokedAt(): Date | null {
+    return this._revokedAt;
   }
 
-  get created_at(): Date {
-    return this._created_at;
+  get createdAt(): Date {
+    return this._createdAt;
   }
 
-  get updated_at(): Date {
-    return this._updated_at;
+  get updatedAt(): Date {
+    return this._updatedAt;
   }
 }

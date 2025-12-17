@@ -3,12 +3,12 @@ import type { IUserEntity } from '../entities/user.entity.js';
 export interface ICreateUserInputRepository {
   name: string;
   email: string;
-  password_hash: string;
+  passwordHash: string;
 }
 
 export interface IUpdateUserSuspendedAtInputRepository {
   id: string;
-  suspended_at: Date;
+  suspendedAt: Date;
 }
 
 export interface IUserRepository {

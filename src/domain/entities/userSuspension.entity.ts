@@ -9,29 +9,29 @@ export type ICATEGORY_USER_SUSPENSION =
 
 export interface IUserSuspensionEntity {
   id: string;
-  user_id: string;
+  userId: string;
   category: (typeof CATEGORY_USER_SUSPENSION)[keyof typeof CATEGORY_USER_SUSPENSION];
   details: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class UserSuspensionEntity implements IUserSuspensionEntity {
   constructor(
     private readonly _id: string,
-    private readonly _user_id: string,
+    private readonly _userId: string,
     private readonly _category: ICATEGORY_USER_SUSPENSION,
     private readonly _details: string,
-    private readonly _created_at: Date,
-    private readonly _updated_at: Date,
-  ) {}
+    private readonly _createdAt: Date,
+    private readonly _updatedAt: Date,
+  ) { }
 
   get id(): string {
     return this._id;
   }
 
-  get user_id(): string {
-    return this._user_id;
+  get userId(): string {
+    return this._userId;
   }
 
   get category(): ICATEGORY_USER_SUSPENSION {
@@ -42,11 +42,11 @@ export class UserSuspensionEntity implements IUserSuspensionEntity {
     return this._details;
   }
 
-  get created_at(): Date {
-    return this._created_at;
+  get createdAt(): Date {
+    return this._createdAt;
   }
 
-  get updated_at(): Date {
-    return this._updated_at;
+  get updatedAt(): Date {
+    return this._updatedAt;
   }
 }

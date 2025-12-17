@@ -1,9 +1,9 @@
 import type { IAuthSessionEntity } from '../entities/authSession.entity.js';
 
 export interface ICreateAuthSessionInputRepository {
-  user_id: string;
-  refresh_token_hash: string;
-  expires_at: Date;
+  userId: string;
+  refreshTokenHash: string;
+  expiresAt: Date;
 }
 
 export interface IAuthSessionRepository {

@@ -11,10 +11,21 @@ export class UserSuspensionRepositoryPostgres implements IUserSuspensionReposito
   async create(
     params: ICreateUserSuspensionInputRepository,
   ): Promise<IUserSuspensionEntity> {
-    const authSession = await prisma.userSuspension.create({
-      data: params,
+    const result = await prisma.userSuspension.create({
+      data: {
+        user_id: params.userId,
+        category: params.category,
+        details: params.details,
+      },
     });
 
-    return authSession;
+    return {
+      id: result.id,
+      userId: result.user_id,
+      category: result.category,
+      details: result.details,
+      createdAt: result.created_at,
+      updatedAt: result.updated_at,
+    };
   }
 }

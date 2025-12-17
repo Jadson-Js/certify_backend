@@ -10,45 +10,47 @@ import { prisma } from '../../../../../prisma/prisma.js';
 @injectable()
 export class UserRepositoryPostgres implements IUserRepository {
   async findAll(): Promise<IUserEntity[]> {
-    const users = await prisma.user.findMany();
+    const results = await prisma.user.findMany();
 
-    return users;
+    return results;
   }
 
   async findById(id: string): Promise<IUserEntity | null> {
-    const user = await prisma.user.findUnique({ where: { id } });
+    const result = await prisma.user.findUnique({ where: { id } });
 
-    return user;
+    if (!result) return null;
+
+    return result;
   }
 
   async findByEmail(email: string): Promise<IUserEntity | null> {
-    const user = await prisma.user.findUnique({
+    const result = await prisma.user.findUnique({
       where: { email },
     });
 
-    return user;
+    if (!result) return null;
+
+    return result;
   }
 
   async create(params: ICreateUserInputRepository): Promise<IUserEntity> {
-    const user = await prisma.user.create({
+    const result = await prisma.user.create({
       data: params,
     });
 
-    return user;
+    return result;
   }
 
   async updateSuspendedAtById(
     params: IUpdateUserSuspendedAtInputRepository,
   ): Promise<IUserEntity> {
-    const user = await prisma.user.update({
-      data: {
-        suspended_at: params.suspended_at,
-      },
+    const result = await prisma.user.update({
+      data: params,
       where: {
         id: params.id,
       },
     });
 
-    return user;
+    return result;
   }
 }

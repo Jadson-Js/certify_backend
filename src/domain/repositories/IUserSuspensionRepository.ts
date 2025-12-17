@@ -4,7 +4,7 @@ import type {
 } from '../entities/userSuspension.entity.js';
 
 export interface ICreateUserSuspensionInputRepository {
-  user_id: string;
+  userId: string;
   category: ICATEGORY_USER_SUSPENSION;
   details: string;
 }

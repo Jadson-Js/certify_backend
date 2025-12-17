@@ -23,13 +23,13 @@ export class SuspendUserUseCase implements ISuspendUserUseCase {
 
     @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
-  ) {}
+  ) { }
 
   async execute(params: ISuspendUserInputUseCase): Promise<void> {
     const { userId, category, details } = params;
 
     await this.userSuspensionRepository.create({
-      user_id: userId,
+      userId: userId,
       category,
       details,
     });
@@ -38,7 +38,7 @@ export class SuspendUserUseCase implements ISuspendUserUseCase {
 
     await this.userRepository.updateSuspendedAtById({
       id: userId,
-      suspended_at: new Date(),
+      suspendedAt: new Date(),
     });
   }
 }
