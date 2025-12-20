@@ -12,20 +12,9 @@ export class UserSuspendedRepositoryPostgres implements IUserSuspendedRepository
     params: ICreateUserSuspendedInputRepository,
   ): Promise<IUserSuspendedEntity> {
     const result = await prisma.userSuspended.create({
-      data: {
-        user_id: params.userId,
-        category: params.category,
-        details: params.details,
-      },
+      data: params,
     });
 
-    return {
-      id: result.id,
-      userId: result.user_id,
-      category: result.category,
-      details: result.details,
-      createdAt: result.created_at,
-      updatedAt: result.updated_at,
-    };
+    return result;
   }
 }

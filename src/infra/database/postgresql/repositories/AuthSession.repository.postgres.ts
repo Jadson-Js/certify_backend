@@ -10,38 +10,15 @@ export class AuthSessionRepositoryPostgres implements IAuthSessionRepository {
       where: { id },
     });
 
-    if (!result) return null;
-
-    return {
-      id: result.id,
-      userId: result.user_id,
-      refreshTokenHash: result.refresh_token_hash,
-      expiresAt: result.expires_at,
-      createdAt: result.created_at,
-      updatedAt: result.updated_at,
-    };
+    return result;
   }
 
   async create(params: IAuthSessionEntity): Promise<IAuthSessionEntity> {
     const result = await prisma.authSession.create({
-      data: {
-        id: params.id,
-        user_id: params.userId,
-        refresh_token_hash: params.refreshTokenHash,
-        expires_at: params.expiresAt,
-        created_at: params.createdAt,
-        updated_at: params.updatedAt,
-      },
+      data: params,
     });
 
-    return {
-      id: result.id,
-      userId: result.user_id,
-      refreshTokenHash: result.refresh_token_hash,
-      expiresAt: result.expires_at,
-      createdAt: result.created_at,
-      updatedAt: result.updated_at,
-    };
+    return result;
   }
 
   async deleteById(id: string): Promise<null> {
@@ -54,7 +31,7 @@ export class AuthSessionRepositoryPostgres implements IAuthSessionRepository {
 
   async deleteByUserId(userId: string): Promise<null> {
     await prisma.authSession.deleteMany({
-      where: { user_id: userId },
+      where: { userId },
     });
 
     return null;
