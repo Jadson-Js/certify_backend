@@ -1,26 +1,26 @@
-export const CATEGORY_USER_SUSPENSION = {
+export const CATEGORY_USER_SUSPENDED = {
   SUSPECT: 'SUSPECT',
   FRAUD: 'FRAUD',
   SPAM: 'SPAM',
   ABUSE: 'ABUSE',
 } as const;
-export type ICATEGORY_USER_SUSPENSION =
-  (typeof CATEGORY_USER_SUSPENSION)[keyof typeof CATEGORY_USER_SUSPENSION];
+export type ICATEGORY_USER_SUSPENDED =
+  (typeof CATEGORY_USER_SUSPENDED)[keyof typeof CATEGORY_USER_SUSPENDED];
 
-export interface IUserSuspensionEntity {
+export interface IUserSuspendedEntity {
   id: string;
   userId: string;
-  category: (typeof CATEGORY_USER_SUSPENSION)[keyof typeof CATEGORY_USER_SUSPENSION];
+  category: (typeof CATEGORY_USER_SUSPENDED)[keyof typeof CATEGORY_USER_SUSPENDED];
   details: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export class UserSuspensionEntity implements IUserSuspensionEntity {
+export class UserSuspendedEntity implements IUserSuspendedEntity {
   constructor(
     private readonly _id: string,
     private readonly _userId: string,
-    private readonly _category: ICATEGORY_USER_SUSPENSION,
+    private readonly _category: ICATEGORY_USER_SUSPENDED,
     private readonly _details: string,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
@@ -34,7 +34,7 @@ export class UserSuspensionEntity implements IUserSuspensionEntity {
     return this._userId;
   }
 
-  get category(): ICATEGORY_USER_SUSPENSION {
+  get category(): ICATEGORY_USER_SUSPENDED {
     return this._category;
   }
 

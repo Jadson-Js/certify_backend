@@ -31,9 +31,9 @@ export const TYPES_AUTH_SESSION = {
   IAuthSessionRepository: Symbol.for('IAuthSessionRepository'),
 };
 
-export const TYPES_USER_SUSPENSION = {
+export const TYPES_USER_SUSPENDED = {
   // Repositories
-  IUserSuspensionRepository: Symbol.for('IUserSuspensionRepository'),
+  IUserSuspendedRepository: Symbol.for('IUserSuspendedRepository'),
 };
 
 export const TYPES_SERVICE = {

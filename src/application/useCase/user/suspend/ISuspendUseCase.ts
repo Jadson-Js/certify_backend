@@ -1,13 +1,13 @@
-import type { ICATEGORY_USER_SUSPENSION } from '../../../../domain/entities/userSuspension.entity.js';
+import type { ICATEGORY_USER_SUSPENDED } from '../../../../domain/entities/userSuspended.entity.js';
 
 export interface ISuspendUserInputUseCase {
   userId: string;
-  category: ICATEGORY_USER_SUSPENSION;
+  category: ICATEGORY_USER_SUSPENDED;
   details: string;
 }
 
 export interface ISuspendUserOutputUseCase {
-  suspensionId: string;
+  suspendedId: string;
 }
 
 export interface ISuspendUserUseCase {

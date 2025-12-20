@@ -1,8 +1,8 @@
 import * as z from 'zod';
-import { CATEGORY_USER_SUSPENSION } from '../../../../domain/entities/userSuspension.entity.js';
+import { CATEGORY_USER_SUSPENDED } from '../../../../domain/entities/userSuspended.entity.js';
 
 export const suspendSchema = z.object({
   userId: z.string().min(3).max(255),
-  category: z.enum(CATEGORY_USER_SUSPENSION),
+  category: z.enum(CATEGORY_USER_SUSPENDED),
   details: z.string(),
 });

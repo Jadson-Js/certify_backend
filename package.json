@@ -16,6 +16,7 @@
     "@types/express": "^5.0.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
+    "@types/nodemailer": "^7.0.4",
     "@types/passport": "^1.0.17",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
@@ -44,10 +45,12 @@
     "express-async-errors": "^3.1.1",
     "inversify": "^7.10.4",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.11",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
+    "resend": "^6.6.0",
     "zod": "^4.1.12"
   }
 }

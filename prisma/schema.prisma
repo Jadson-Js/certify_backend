@@ -13,7 +13,7 @@ datasource db {
   provider = "postgresql"
 }
 
-enum CategoryUserSuspension {
+enum CategoryUserSuspended {
   SUSPECT
   FRAUD
   SPAM
@@ -30,7 +30,7 @@ model User {
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
   authSessions   AuthSession[]
-  userSuspension UserSuspension?
+  userSuspended UserSuspended?
 
   @@map("users")
 }
@@ -48,15 +48,15 @@ model AuthSession {
   @@map("auth_sessions")
 }
 
-model UserSuspension {
+model UserSuspended {
   id         String                 @id @default(uuid()) @db.Uuid
   user_id    String                 @unique @map("user_id") @db.Uuid
-  category   CategoryUserSuspension
+  category   CategoryUserSuspended
   details    String
   created_at DateTime               @default(now()) @map("created_at")
   updated_at DateTime               @updatedAt @map("updated_at")
 
   user User @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  @@map("user_suspensions")
+  @@map("user_suspended")
 }
