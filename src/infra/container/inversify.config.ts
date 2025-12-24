@@ -5,6 +5,7 @@ import { userModule } from './modules/user.js';
 import { middlewareModule } from './modules/middleware.js';
 import { authSessionModule } from './modules/authSession.js';
 import { userSuspendedModule } from './modules/userSuspended.js';
+import { emailVerificationTokenModule } from './modules/emailVerificationToken.js';
 
 const container = new Container();
 
@@ -12,6 +13,7 @@ const container = new Container();
 container.load(userModule);
 container.load(authModule);
 container.load(authSessionModule);
+container.load(emailVerificationTokenModule);
 container.load(serviceModule);
 container.load(middlewareModule);
 container.load(userSuspendedModule);

@@ -36,10 +36,16 @@ export const TYPES_USER_SUSPENDED = {
   IUserSuspendedRepository: Symbol.for('IUserSuspendedRepository'),
 };
 
+export const TYPES_EMAIL_VERIFICATION_TOKEN = {
+  // Repositories
+  IEmailVerificationTokenRepository: Symbol.for('IEmailVerificationTokenRepository'),
+};
+
 export const TYPES_SERVICE = {
   IJwtService: Symbol.for('IJwtService'),
   IEncryptService: Symbol.for('IEncryptService'),
   IAuthSessionService: Symbol.for('IAuthSessionService'),
+  IEmailService: Symbol.for('IEmailService'),
 };
 
 export const TYPES_MIDDLEWARE = {

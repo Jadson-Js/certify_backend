@@ -3,6 +3,7 @@ import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 import type {
   ICreateUserInputRepository,
   IUpdateUserSuspendedAtInputRepository,
+  IUpdateUserVerifiedAtInputRepository,
   IUserRepository,
 } from '../../../../domain/repositories/IUserRepository.js';
 import { prisma } from '../../../../../prisma/prisma.js';
@@ -43,6 +44,19 @@ export class UserRepositoryPostgres implements IUserRepository {
 
   async updateSuspendedAtById(
     params: IUpdateUserSuspendedAtInputRepository,
+  ): Promise<IUserEntity> {
+    const result = await prisma.user.update({
+      data: params,
+      where: {
+        id: params.id,
+      },
+    });
+
+    return result;
+  }
+
+  async updateVerifiedAtById(
+    params: IUpdateUserVerifiedAtInputRepository,
   ): Promise<IUserEntity> {
     const result = await prisma.user.update({
       data: params,

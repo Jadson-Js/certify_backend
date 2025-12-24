@@ -6,5 +6,5 @@ export const env = {
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   JWT_ACCESS_EXPIRES: process.env.JWT_ACCESS_EXPIRES,
   JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES,
-  RESEND_API_KEY: process.env.RESEND_API_KEY,
+  RESEND_KEY: process.env.RESEND_KEY,
 };

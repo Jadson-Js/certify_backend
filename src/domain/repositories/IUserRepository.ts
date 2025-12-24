@@ -6,6 +6,11 @@ export interface ICreateUserInputRepository {
   passwordHash: string;
 }
 
+export interface IUpdateUserVerifiedAtInputRepository {
+  id: string;
+  verifiedAt: Date;
+}
+
 export interface IUpdateUserSuspendedAtInputRepository {
   id: string;
   suspendedAt: Date;
@@ -15,8 +20,11 @@ export interface IUserRepository {
   findAll(): Promise<IUserEntity[]>;
   findById(id: string): Promise<IUserEntity | null>;
   findByEmail(email: string): Promise<IUserEntity | null>;
-  create(params: ICreateUserInputRepository): Promise<IUserEntity>;
+  updateVerifiedAtById(
+    params: IUpdateUserVerifiedAtInputRepository,
+  ): Promise<IUserEntity>;
   updateSuspendedAtById(
     params: IUpdateUserSuspendedAtInputRepository,
   ): Promise<IUserEntity>;
+  create(params: ICreateUserInputRepository): Promise<IUserEntity>;
 }
