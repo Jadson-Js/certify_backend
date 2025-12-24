@@ -8,6 +8,7 @@ import type { ITokenUseCase } from '../../../application/useCase/auth/token/ITok
 import { signupPresenter } from '../../../application/presenters/auth/signupPresenter.js';
 import { loginPresenter } from '../../../application/presenters/auth/loginPresenter.js';
 import type { ILogoutUseCase } from '../../../application/useCase/auth/logout/ILogoutUseCase.js';
+import type { IVerifyEmailTokenUseCase } from '../../../application/useCase/auth/verifyEmailToken/IVerifyEmailTokenUseCase.js';
 
 @injectable()
 export class AuthController {
@@ -23,6 +24,9 @@ export class AuthController {
 
     @inject(TYPES_AUTH.ILogoutUseCase)
     private readonly logoutUseCase: ILogoutUseCase,
+
+    @inject(TYPES_AUTH.IVerifyEmailTokenUseCase)
+    private readonly verifyEmailTokenUseCase: IVerifyEmailTokenUseCase,
   ) {}
 
   async signup(req: Request, res: Response) {
@@ -96,6 +100,14 @@ export class AuthController {
 
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
+
+    return ok(res, 200);
+  }
+
+  async verifyEmailToken(req: Request, res: Response) {
+    const { token } = req.body;
+
+    await this.verifyEmailTokenUseCase.execute({ token });
 
     return ok(res, 200);
   }

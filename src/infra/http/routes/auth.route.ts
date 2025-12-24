@@ -5,7 +5,7 @@ import { Router } from 'express';
 import {
   loginSchema,
   signupSchema,
-  tokenSchema,
+  verifyEmailTokenSchema,
 } from '../middlewares/zod/auth.schema.js';
 import { validate } from '../middlewares/validate.js';
 import { type IEnsureAuthenticated } from '../middlewares/ensureAuthentticated.js';
@@ -45,6 +45,12 @@ export class AuthRoutes {
       '/logout',
       this.ensureAuthenticated.authRefresh.bind(this.ensureAuthenticated),
       this.authController.logout.bind(this.authController),
+    );
+
+    router.post(
+      '/email/verify',
+      validate(verifyEmailTokenSchema, 'body'),
+      this.authController.verifyEmailToken.bind(this.authController),
     );
 
     return router;

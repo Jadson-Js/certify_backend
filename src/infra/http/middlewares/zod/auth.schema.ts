@@ -14,3 +14,7 @@ export const loginSchema = z.object({
 export const tokenSchema = z.object({
   refreshToken: z.string(),
 });
+
+export const verifyEmailTokenSchema = z.object({
+  token: z.string(),
+});

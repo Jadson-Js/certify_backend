@@ -18,6 +18,7 @@ export const TYPES_AUTH = {
   ILoginUseCase: Symbol.for('ILoginUseCase'),
   ITokenUseCase: Symbol.for('ITokenUseCase'),
   ILogoutUseCase: Symbol.for('ILogoutUseCase'),
+  IVerifyEmailTokenUseCase: Symbol.for('IVerifyEmailTokenUseCase'),
 
   // Controllers
   AuthController: Symbol.for('AuthController'),
@@ -38,7 +39,9 @@ export const TYPES_USER_SUSPENDED = {
 
 export const TYPES_EMAIL_VERIFICATION_TOKEN = {
   // Repositories
-  IEmailVerificationTokenRepository: Symbol.for('IEmailVerificationTokenRepository'),
+  IEmailVerificationTokenRepository: Symbol.for(
+    'IEmailVerificationTokenRepository',
+  ),
 };
 
 export const TYPES_SERVICE = {
