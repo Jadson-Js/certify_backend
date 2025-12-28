@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 import type {
   ICreateUserInputRepository,
+  IUpdateUserPasswordHashInputRepository,
   IUpdateUserSuspendedAtInputRepository,
   IUpdateUserVerifiedAtInputRepository,
   IUserRepository,
@@ -57,6 +58,19 @@ export class UserRepositoryPostgres implements IUserRepository {
 
   async updateVerifiedAtById(
     params: IUpdateUserVerifiedAtInputRepository,
+  ): Promise<IUserEntity> {
+    const result = await prisma.user.update({
+      data: params,
+      where: {
+        id: params.id,
+      },
+    });
+
+    return result;
+  }
+
+  async updatePasswordHashById(
+    params: IUpdateUserPasswordHashInputRepository,
   ): Promise<IUserEntity> {
     const result = await prisma.user.update({
       data: params,

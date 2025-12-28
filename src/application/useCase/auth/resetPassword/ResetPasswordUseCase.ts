@@ -1,23 +1,26 @@
 import { inject, injectable } from 'inversify';
+import type {
+  IResetPasswordInputUseCase,
+  IResetPasswordUseCase,
+} from './IResetPasswordUseCase.js';
 import {
   TYPES_EMAIL_VERIFICATION_TOKEN,
   TYPES_SERVICE,
   TYPES_USER,
 } from '../../../../infra/container/types.js';
-import type {
-  ISignupInputUseCase,
-  ISignupOutputUseCase,
-  ISignupUseCase,
-} from './ISignupUseCase.js';
-import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import { createHash, randomBytes } from 'crypto';
+import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import type { IEmailService } from '../../../../domain/services/IEmailService.js';
 import type { IEmailVerificationTokenRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
+import { createHash, randomBytes } from 'crypto';
+import {
+  ConflictError,
+  NotFoundError,
+} from '../../../../shared/error/AppError.js';
 import { emailRender } from '../../../../infra/services/email/emailRender.js';
 
 @injectable()
-export class SignupUseCase implements ISignupUseCase {
+export class ResetPasswordUseCase implements IResetPasswordUseCase {
   constructor(
     @inject(TYPES_USER.IUserRepository)
     private readonly userRepository: IUserRepository,
@@ -32,14 +35,13 @@ export class SignupUseCase implements ISignupUseCase {
     private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
   ) {}
 
-  async execute(params: ISignupInputUseCase): Promise<ISignupOutputUseCase> {
-    const { name, email, password } = params;
-    const passwordHash = await this.encryptService.hash(password);
-    const user = await this.userRepository.create({
-      name,
-      email,
-      passwordHash,
-    });
+  async execute(params: IResetPasswordInputUseCase): Promise<null> {
+    const { email } = params;
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) throw new NotFoundError(`User not found by email: ${email}`);
+    if (!user.verifiedAt)
+      throw new ConflictError('Email has not yet been verified.');
+    if (user.suspendedAt) throw new ConflictError('User has been suspended.');
 
     const { token, expiresAt, tokenHash } = this.generateToken();
     await this.emailVerificationTokenRepository.create({
@@ -48,9 +50,9 @@ export class SignupUseCase implements ISignupUseCase {
       expiresAt,
     });
 
-    await this.sendEmailToken(name, email, token);
+    await this.sendEmailToken(user.name, email, token);
 
-    return user;
+    return null;
   }
 
   private generateToken() {
@@ -68,11 +70,11 @@ export class SignupUseCase implements ISignupUseCase {
   }
 
   private async sendEmailToken(name: string, email: string, token: string) {
-    const url = 'http://localhost:3000/api/v1/auth/email/' + token;
+    const url = 'http://localhost:3000/api/v1/auth/reset-password/' + token;
     await this.emailService.send({
       to: email,
-      subject: 'Confirm Email',
-      html: emailRender('CONFIRM_EMAIL', { name, url }),
+      subject: 'Reset Password',
+      html: emailRender('RESET_PASSWORD', { name, url }),
     });
   }
 }

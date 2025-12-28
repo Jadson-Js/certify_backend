@@ -9,6 +9,7 @@ import { signupPresenter } from '../../../application/presenters/auth/signupPres
 import { loginPresenter } from '../../../application/presenters/auth/loginPresenter.js';
 import type { ILogoutUseCase } from '../../../application/useCase/auth/logout/ILogoutUseCase.js';
 import type { IVerifyEmailTokenUseCase } from '../../../application/useCase/auth/verifyEmailToken/IVerifyEmailTokenUseCase.js';
+import type { IResetPasswordUseCase } from '../../../application/useCase/auth/resetPassword/IResetPasswordUseCase.js';
 
 @injectable()
 export class AuthController {
@@ -24,6 +25,9 @@ export class AuthController {
 
     @inject(TYPES_AUTH.ILogoutUseCase)
     private readonly logoutUseCase: ILogoutUseCase,
+
+    @inject(TYPES_AUTH.IResetPasswordUseCase)
+    private readonly resetPasswordUseCase: IResetPasswordUseCase,
 
     @inject(TYPES_AUTH.IVerifyEmailTokenUseCase)
     private readonly verifyEmailTokenUseCase: IVerifyEmailTokenUseCase,
@@ -108,6 +112,18 @@ export class AuthController {
     const { token } = req.body;
 
     await this.verifyEmailTokenUseCase.execute({ token });
+
+    return ok(res, 200);
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    const data = req.body;
+
+    const input = {
+      email: data.email,
+    };
+
+    await this.resetPasswordUseCase.execute(input);
 
     return ok(res, 200);
   }

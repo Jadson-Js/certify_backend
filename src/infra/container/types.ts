@@ -18,6 +18,7 @@ export const TYPES_AUTH = {
   ILoginUseCase: Symbol.for('ILoginUseCase'),
   ITokenUseCase: Symbol.for('ITokenUseCase'),
   ILogoutUseCase: Symbol.for('ILogoutUseCase'),
+  IResetPasswordUseCase: Symbol.for('IResetPasswordUseCase'),
   IVerifyEmailTokenUseCase: Symbol.for('IVerifyEmailTokenUseCase'),
 
   // Controllers
