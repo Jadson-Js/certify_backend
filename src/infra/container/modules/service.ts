@@ -4,6 +4,7 @@ import { JwtService } from '../../services/JwtService.js';
 import { EncryptService } from '../../services/EncryptService.js';
 import { AuthSessionService } from '../../services/AuthTokenService.js';
 import { EmailService } from '../../services/email/EmailService.js';
+import { TokenValidationService } from '../../services/TokenValidationService.js';
 
 export const serviceModule = new ContainerModule((container) => {
   container.bind(TYPES_SERVICE.IJwtService).to(JwtService).inSingletonScope();
@@ -18,5 +19,9 @@ export const serviceModule = new ContainerModule((container) => {
   container
     .bind(TYPES_SERVICE.IEmailService)
     .to(EmailService)
+    .inSingletonScope();
+  container
+    .bind(TYPES_SERVICE.ITokenValidationService)
+    .to(TokenValidationService)
     .inSingletonScope();
 });

@@ -19,6 +19,7 @@ export const TYPES_AUTH = {
   ITokenUseCase: Symbol.for('ITokenUseCase'),
   ILogoutUseCase: Symbol.for('ILogoutUseCase'),
   IResetPasswordUseCase: Symbol.for('IResetPasswordUseCase'),
+  ISendResetPasswordEmailUseCase: Symbol.for('ISendResetPasswordEmailUseCase'),
   IVerifyEmailTokenUseCase: Symbol.for('IVerifyEmailTokenUseCase'),
 
   // Controllers
@@ -50,6 +51,7 @@ export const TYPES_SERVICE = {
   IEncryptService: Symbol.for('IEncryptService'),
   IAuthSessionService: Symbol.for('IAuthSessionService'),
   IEmailService: Symbol.for('IEmailService'),
+  ITokenValidationService: Symbol.for('ITokenValidationService'),
 };
 
 export const TYPES_MIDDLEWARE = {
