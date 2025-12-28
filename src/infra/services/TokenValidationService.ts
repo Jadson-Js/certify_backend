@@ -6,25 +6,24 @@ import type { IEmailVerificationTokenRepository } from '../../domain/repositorie
 import type { IEmailVerificationTokenEntity } from '../../domain/entities/emailVerificationToken.entity.js';
 import { ConflictError, NotFoundError } from '../../shared/error/AppError.js';
 
-
 @injectable()
 export class TokenValidationService implements ITokenValidationService {
-    constructor(
-        @inject(TYPES_EMAIL_VERIFICATION_TOKEN.IEmailVerificationTokenRepository)
-        private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
-    ) { }
+  constructor(
+    @inject(TYPES_EMAIL_VERIFICATION_TOKEN.IEmailVerificationTokenRepository)
+    private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
+  ) {}
 
-    async validateToken(token: string): Promise<IEmailVerificationTokenEntity> {
-        const tokenHash = createHash('sha256').update(token).digest('hex');
+  async validateToken(token: string): Promise<IEmailVerificationTokenEntity> {
+    const tokenHash = createHash('sha256').update(token).digest('hex');
 
-        const emailVerification =
-            await this.emailVerificationTokenRepository.findByHashToken(tokenHash);
+    const emailVerification =
+      await this.emailVerificationTokenRepository.findByHashToken(tokenHash);
 
-        if (!emailVerification) throw new NotFoundError('Token not found');
+    if (!emailVerification) throw new NotFoundError('Token not found');
 
-        if (new Date(emailVerification.expiresAt) < new Date())
-            throw new ConflictError('Token verification expired');
+    if (new Date(emailVerification.expiresAt) < new Date())
+      throw new ConflictError('Token verification expired');
 
-        return emailVerification;
-    }
+    return emailVerification;
+  }
 }

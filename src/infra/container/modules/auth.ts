@@ -8,6 +8,7 @@ import { TokenUseCase } from '../../../application/useCase/auth/token/TokenUseCa
 import { LogoutUseCase } from '../../../application/useCase/auth/logout/LogoutUseCase.js';
 import { VerifyEmailTokenUseCase } from '../../../application/useCase/auth/verifyEmailToken/VerifyEmailTokenUseCase.js';
 import { SendResetPasswordEmailUseCase } from '../../../application/useCase/auth/sendResetPasswordEmail/SendResetPasswordEmailUseCase.js';
+import { ResetPasswordUseCase } from '../../../application/useCase/auth/resetPassword/ResetPasswordUseCase.js';
 
 export const authModule = new ContainerModule((container) => {
   // USE_CASES
@@ -23,7 +24,7 @@ export const authModule = new ContainerModule((container) => {
     .inSingletonScope();
   container
     .bind(TYPES_AUTH.IResetPasswordUseCase)
-    .to(SendResetPasswordEmailUseCase)
+    .to(ResetPasswordUseCase)
     .inSingletonScope();
   container
     .bind(TYPES_AUTH.ISendResetPasswordEmailUseCase)

@@ -1,7 +1,7 @@
 export interface ISendResetPasswordEmailInputUseCase {
-    email: string;
+  email: string;
 }
 
 export interface ISendResetPasswordEmailUseCase {
-    execute(params: ISendResetPasswordEmailInputUseCase): Promise<null>;
+  execute(params: ISendResetPasswordEmailInputUseCase): Promise<null>;
 }

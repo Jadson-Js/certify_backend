@@ -5,8 +5,9 @@ import { Router } from 'express';
 import {
   loginSchema,
   signupSchema,
-  resetPasswordSchema,
+  sendEmailToResetPasswordSchema,
   verifyEmailTokenSchema,
+  resetPasswordSchemas,
 } from '../middlewares/zod/auth.schema.js';
 import { validate } from '../middlewares/validate.js';
 import { type IEnsureAuthenticated } from '../middlewares/ensureAuthentticated.js';
@@ -50,7 +51,13 @@ export class AuthRoutes {
 
     router.post(
       '/send-reset-password',
-      validate(resetPasswordSchema, 'body'),
+      validate(sendEmailToResetPasswordSchema, 'body'),
+      this.authController.sendEmailToResetPassword.bind(this.authController),
+    );
+
+    router.post(
+      '/reset-password',
+      validate(resetPasswordSchemas, 'body'),
       this.authController.resetPassword.bind(this.authController),
     );
 

@@ -10,6 +10,7 @@ import { loginPresenter } from '../../../application/presenters/auth/loginPresen
 import type { ILogoutUseCase } from '../../../application/useCase/auth/logout/ILogoutUseCase.js';
 import type { IVerifyEmailTokenUseCase } from '../../../application/useCase/auth/verifyEmailToken/IVerifyEmailTokenUseCase.js';
 import type { ISendResetPasswordEmailUseCase } from '../../../application/useCase/auth/sendResetPasswordEmail/ISendResetPasswordEmailUseCase.js';
+import type { IResetPasswordUseCase } from '../../../application/useCase/auth/resetPassword/IResetPasswordUseCase.js';
 
 @injectable()
 export class AuthController {
@@ -29,9 +30,12 @@ export class AuthController {
     @inject(TYPES_AUTH.ISendResetPasswordEmailUseCase)
     private readonly sendResetPasswordEmailUseCase: ISendResetPasswordEmailUseCase,
 
+    @inject(TYPES_AUTH.IResetPasswordUseCase)
+    private readonly resetPasswordUseCase: IResetPasswordUseCase,
+
     @inject(TYPES_AUTH.IVerifyEmailTokenUseCase)
     private readonly verifyEmailTokenUseCase: IVerifyEmailTokenUseCase,
-  ) { }
+  ) {}
 
   async signup(req: Request, res: Response) {
     const data = req.body;
@@ -116,7 +120,7 @@ export class AuthController {
     return ok(res, 200);
   }
 
-  async resetPassword(req: Request, res: Response) {
+  async sendEmailToResetPassword(req: Request, res: Response) {
     const data = req.body;
 
     const input = {
@@ -124,6 +128,19 @@ export class AuthController {
     };
 
     await this.sendResetPasswordEmailUseCase.execute(input);
+
+    return ok(res, 200);
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    const data = req.body;
+
+    const input = {
+      token: data.token,
+      password: data.password,
+    };
+
+    await this.resetPasswordUseCase.execute(input);
 
     return ok(res, 200);
   }
