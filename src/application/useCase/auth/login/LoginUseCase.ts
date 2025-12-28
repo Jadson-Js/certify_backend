@@ -12,6 +12,7 @@ import {
 } from '../../../../infra/container/types.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import {
+  ConflictError,
   NotFoundError,
   UnauthorizedError,
 } from '../../../../shared/error/AppError.js';
@@ -39,15 +40,16 @@ export class LoginUseCase implements ILoginUseCase {
 
     @inject(TYPES_SERVICE.IAuthSessionService)
     private readonly authSessionService: IAuthSessionService,
-  ) { }
+  ) {}
 
   async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
     const { email, password } = params;
 
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundError(`User not found by email: ${email}`);
-    // if (!user.verifiedAt) throw new ConflictError("Email has not yet been verified.")
-    // if (user.suspendedAt) throw new ConflictError("User has been suspended.")
+    if (!user.verifiedAt)
+      throw new ConflictError('Email has not yet been verified.');
+    if (user.suspendedAt) throw new ConflictError('User has been suspended.');
 
     const validPassword = await this.encryptService.compare(
       password,
