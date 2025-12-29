@@ -4,7 +4,7 @@ import type { IAuthSessionRepository } from '../../domain/repositories/IAuthSess
 import type { IJwtService } from '../../domain/services/IJwtService.js';
 import type { IEncryptService } from '../../domain/services/IEncryptService.js';
 import { extractExpiresAtInToken } from '../../shared/utils/extractExpiresAtInToken.js';
-import type { IAuthSessionEntity } from '../../domain/entities/authSession.entity.js';
+import type { IAuthSessionEntity } from '../../domain/entities/AuthSession.entity.js';
 
 export interface IAuthSessionService {
     create(

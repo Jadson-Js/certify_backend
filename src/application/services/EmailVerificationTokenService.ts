@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { createHash, randomBytes } from 'crypto';
 import { TYPES_EMAIL_VERIFICATION_TOKEN } from '../../infra/container/types.js';
 import type { IEmailVerificationTokenRepository } from '../../domain/repositories/IEmailVerificationTokenRepository.js';
-import type { EmailVerificationTokenEntity } from '../../domain/entities/emailVerificationToken.entity.js';
+import type { EmailVerificationTokenEntity } from '../../domain/entities/EmailVerificationToken.entity.js';
 import { ConflictError, NotFoundError } from '../../shared/error/AppError.js';
 
 export interface IEmailVerificationTokenService {

@@ -1,4 +1,4 @@
-import type { ICATEGORY_USER_SUSPENDED } from '../../../../domain/entities/userSuspended.entity.js';
+import type { ICATEGORY_USER_SUSPENDED } from '../../../../domain/entities/UserSuspended.entity.js';
 
 export interface ISuspendUserInputUseCase {
   userId: string;

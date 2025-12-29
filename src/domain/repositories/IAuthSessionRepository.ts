@@ -1,4 +1,4 @@
-import type { IAuthSessionEntity } from '../entities/authSession.entity.js';
+import type { IAuthSessionEntity } from '../entities/AuthSession.entity.js';
 
 export interface ICreateAuthSessionInputRepository {
   userId: string;

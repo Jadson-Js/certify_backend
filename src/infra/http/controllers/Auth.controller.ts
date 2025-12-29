@@ -116,7 +116,7 @@ export class AuthController {
     return ok(res, 200);
   }
 
-  async sendEmailToResetPassword(req: Request, res: Response) {
+  async sendResetPasswordEmail(req: Request, res: Response) {
     const data = sendResetPasswordEmailSchema.parse(req.body);
 
     await this.sendResetPasswordEmailUseCase.execute(data);

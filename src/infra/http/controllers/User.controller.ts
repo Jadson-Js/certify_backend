@@ -12,7 +12,7 @@ export class UserController {
     private readonly suspendUserUseCase: ISuspendUserUseCase,
   ) { }
 
-  async suspend(req: Request, res: Response) {
+  async suspendUser(req: Request, res: Response) {
     const data = suspendUserSchema.parse(req.body);
 
     await this.suspendUserUseCase.execute(data);

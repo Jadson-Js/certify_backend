@@ -19,7 +19,7 @@ export class AuthSessionEntity implements IAuthSessionEntity {
   ) { }
 
   // Static factory method
-  static from(data: IAuthSessionEntity): AuthSessionEntity {
+  static from(data: Omit<IAuthSessionEntity, 'isExpired'>): AuthSessionEntity {
     return new AuthSessionEntity(
       data.id,
       data.userId,

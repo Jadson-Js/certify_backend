@@ -1,7 +1,7 @@
 import type {
   ICATEGORY_USER_SUSPENDED,
   IUserSuspendedEntity,
-} from '../entities/userSuspended.entity.js';
+} from '../entities/UserSuspended.entity.js';
 
 export interface ICreateUserSuspendedInputRepository {
   userId: string;

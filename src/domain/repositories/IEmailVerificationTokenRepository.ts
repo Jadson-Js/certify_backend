@@ -1,4 +1,4 @@
-import type { EmailVerificationTokenEntity } from '../entities/emailVerificationToken.entity.js';
+import type { EmailVerificationTokenEntity } from '../entities/EmailVerificationToken.entity.js';
 
 export interface ICreateEmailVerificationTokenInputRepository {
   userId: string;

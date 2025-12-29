@@ -21,7 +21,7 @@ import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpires
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
 import type { IAuthSessionService } from '../../../services/AuthSessionService.js';
-import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
+import type { IUserEntity } from '../../../../domain/entities/User.entity.js';
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {

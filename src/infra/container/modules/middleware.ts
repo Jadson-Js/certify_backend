@@ -1,6 +1,6 @@
 import { ContainerModule } from 'inversify';
 import { TYPES_MIDDLEWARE } from '../types.js';
-import { EnsureAuthenticated } from '../../http/middlewares/ensureAuthentticated.js';
+import { EnsureAuthenticated } from '../../http/middlewares/EnsureAuthenticated.js';
 
 export const middlewareModule = new ContainerModule((container) => {
   container

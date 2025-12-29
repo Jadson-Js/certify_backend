@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import type { IEmailVerificationTokenRepository, ICreateEmailVerificationTokenInputRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
-import { EmailVerificationTokenEntity } from '../../../../domain/entities/emailVerificationToken.entity.js';
+import { EmailVerificationTokenEntity } from '../../../../domain/entities/EmailVerificationToken.entity.js';
 import { prisma } from '../../../../../prisma/prisma.js';
 
 @injectable()

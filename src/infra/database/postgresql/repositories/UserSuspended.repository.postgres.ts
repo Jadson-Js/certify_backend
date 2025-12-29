@@ -4,8 +4,8 @@ import type {
   IUserSuspendedRepository,
 } from '../../../../domain/repositories/IUserSuspendedRepository.js';
 import { prisma } from '../../../../../prisma/prisma.js';
-import type { IUserSuspendedEntity } from '../../../../domain/entities/userSuspended.entity.js';
-import { UserSuspendedEntity } from '../../../../domain/entities/userSuspended.entity.js';
+import type { IUserSuspendedEntity } from '../../../../domain/entities/UserSuspended.entity.js';
+import { UserSuspendedEntity } from '../../../../domain/entities/UserSuspended.entity.js';
 
 @injectable()
 export class UserSuspendedRepositoryPostgres implements IUserSuspendedRepository {

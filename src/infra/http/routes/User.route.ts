@@ -1,15 +1,13 @@
 import { inject, injectable } from 'inversify';
 import {
-  TYPES_AUTH,
   TYPES_MIDDLEWARE,
   TYPES_USER,
 } from '../../container/types.js';
-import type { AuthController } from '../controllers/auth.controller.js';
 import { Router } from 'express';
 
 import { validate } from '../middlewares/validate.js';
-import { type IEnsureAuthenticated } from '../middlewares/ensureAuthentticated.js';
-import type { UserController } from '../controllers/user.controller.js';
+import { type IEnsureAuthenticated } from '../middlewares/EnsureAuthenticated.js';
+import type { UserController } from '../controllers/User.controller.js';
 import { suspendUserSchema } from '../schemas/user.schemas.js';
 
 @injectable()
@@ -25,7 +23,7 @@ export class UserRoutes {
     router.post(
       '/suspend',
       validate(suspendUserSchema, 'body'),
-      this.userController.suspend.bind(this.userController),
+      this.userController.suspendUser.bind(this.userController),
     );
 
     return router;

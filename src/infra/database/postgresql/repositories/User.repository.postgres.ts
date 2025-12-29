@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
-import { UserEntity } from '../../../../domain/entities/user.entity.js';
+import type { IUserEntity } from '../../../../domain/entities/User.entity.js';
+import { UserEntity } from '../../../../domain/entities/User.entity.js';
 import type {
   ICreateUserInputRepository,
   IUpdateUserPasswordHashInputRepository,

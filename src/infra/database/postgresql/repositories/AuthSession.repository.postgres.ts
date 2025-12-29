@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
-import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
-import { AuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
+import type { IAuthSessionEntity } from '../../../../domain/entities/AuthSession.entity.js';
+import { AuthSessionEntity } from '../../../../domain/entities/AuthSession.entity.js';
 import { prisma } from '../../../../../prisma/prisma.js';
 
 @injectable()

@@ -1,4 +1,4 @@
-import type { IUserEntity } from '../entities/user.entity.js';
+import type { IUserEntity } from '../entities/User.entity.js';
 
 export interface ICreateUserInputRepository {
   name: string;
