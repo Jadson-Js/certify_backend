@@ -5,6 +5,7 @@ export interface IAuthSessionEntity {
   expiresAt: Date;
   createdAt: Date;
   updatedAt: Date;
+  isExpired(): boolean;
 }
 
 export class AuthSessionEntity implements IAuthSessionEntity {
@@ -13,10 +14,21 @@ export class AuthSessionEntity implements IAuthSessionEntity {
     private readonly _userId: string,
     private readonly _refreshTokenHash: string,
     private readonly _expiresAt: Date,
-    private readonly _revokedAt: Date | null,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
-  ) {}
+  ) { }
+
+  // Static factory method
+  static from(data: IAuthSessionEntity): AuthSessionEntity {
+    return new AuthSessionEntity(
+      data.id,
+      data.userId,
+      data.refreshTokenHash,
+      data.expiresAt,
+      data.createdAt,
+      data.updatedAt,
+    );
+  }
 
   get id(): string {
     return this._id;
@@ -34,10 +46,6 @@ export class AuthSessionEntity implements IAuthSessionEntity {
     return this._expiresAt;
   }
 
-  get revokedAt(): Date | null {
-    return this._revokedAt;
-  }
-
   get createdAt(): Date {
     return this._createdAt;
   }
@@ -45,4 +53,10 @@ export class AuthSessionEntity implements IAuthSessionEntity {
   get updatedAt(): Date {
     return this._updatedAt;
   }
+
+  // Domain logic methods
+  isExpired(): boolean {
+    return new Date() > this._expiresAt;
+  }
 }
+

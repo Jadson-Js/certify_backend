@@ -20,7 +20,7 @@ import { randomUUID } from 'crypto';
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import type { IAuthSessionService } from '../../../../domain/services/IAuthSessionService.js';
+import type { IAuthSessionService } from '../../../services/AuthSessionService.js';
 
 @injectable()
 export class TokenUseCase implements ITokenUseCase {
@@ -46,14 +46,24 @@ export class TokenUseCase implements ITokenUseCase {
       params.authSessionId,
     );
     if (!authSession) throw new NotFoundError('Auth Session not found');
-    if (new Date(authSession.expiresAt) < new Date())
-      throw new ConflictError('Auth Session expiried');
+
+    // Use domain method for session validation
+    if (authSession.isExpired()) {
+      throw new ConflictError('Auth Session expired');
+    }
+
     await this.authSessionRepository.deleteById(authSession.id);
 
     const user = await this.userRepository.findById(authSession.userId);
     if (!user) throw new NotFoundError('User not found');
-    // if (user.verifiedAt == null) throw new UnauthorizedError('The user is not verified');
-    // if (user.suspendedAt) throw new ConflictError("User has been suspended.")
+
+    // Use domain methods for user validation
+    if (!user.isVerified()) {
+      throw new UnauthorizedError('The user is not verified');
+    }
+    if (user.isSuspended()) {
+      throw new ConflictError('User has been suspended.');
+    }
 
     const authSessionId = randomUUID();
     const accessToken = this.jwtService.generateAccessToken({

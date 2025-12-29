@@ -1,28 +1,30 @@
 import { injectable } from 'inversify';
-import type { IEmailVerificationTokenRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
-import type { IEmailVerificationTokenEntity } from '../../../../domain/entities/emailVerificationToken.entity.js';
+import type { IEmailVerificationTokenRepository, ICreateEmailVerificationTokenInputRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
+import { EmailVerificationTokenEntity } from '../../../../domain/entities/emailVerificationToken.entity.js';
 import { prisma } from '../../../../../prisma/prisma.js';
 
 @injectable()
 export class EmailVerificationTokenRepositoryPostgres implements IEmailVerificationTokenRepository {
   async findByHashToken(
     tokenHash: string,
-  ): Promise<IEmailVerificationTokenEntity | null> {
+  ): Promise<EmailVerificationTokenEntity | null> {
     const result = await prisma.emailVerificationToken.findUnique({
       where: { tokenHash },
     });
 
-    return result;
+    if (!result) return null;
+
+    return EmailVerificationTokenEntity.from(result);
   }
 
   async create(
-    params: IEmailVerificationTokenEntity,
-  ): Promise<IEmailVerificationTokenEntity> {
+    params: ICreateEmailVerificationTokenInputRepository,
+  ): Promise<EmailVerificationTokenEntity> {
     const result = await prisma.emailVerificationToken.create({
       data: params,
     });
 
-    return result;
+    return EmailVerificationTokenEntity.from(result);
   }
 
   async deleteById(id: string): Promise<null> {

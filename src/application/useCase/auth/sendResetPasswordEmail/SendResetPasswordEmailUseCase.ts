@@ -11,7 +11,7 @@ import {
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import type { IEmailService } from '../../../../domain/services/IEmailService.js';
 import type { IEmailVerificationTokenRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
-import { createHash, randomBytes } from 'crypto';
+import type { IEmailVerificationTokenService } from '../../../services/EmailVerificationTokenService.js';
 import {
     ConflictError,
     NotFoundError,
@@ -29,17 +29,25 @@ export class SendResetPasswordEmailUseCase implements ISendResetPasswordEmailUse
 
         @inject(TYPES_EMAIL_VERIFICATION_TOKEN.IEmailVerificationTokenRepository)
         private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
+
+        @inject(TYPES_SERVICE.IEmailVerificationTokenService)
+        private readonly emailVerificationTokenService: IEmailVerificationTokenService,
     ) { }
 
     async execute(params: ISendResetPasswordEmailInputUseCase): Promise<null> {
         const { email } = params;
         const user = await this.userRepository.findByEmail(email);
         if (!user) throw new NotFoundError(`User not found by email: ${email}`);
-        if (!user.verifiedAt)
-            throw new ConflictError('Email has not yet been verified.');
-        if (user.suspendedAt) throw new ConflictError('User has been suspended.');
 
-        const { token, expiresAt, tokenHash } = this.generateToken();
+        // Use domain methods for validation
+        if (!user.isVerified()) {
+            throw new ConflictError('Email has not yet been verified.');
+        }
+        if (user.isSuspended()) {
+            throw new ConflictError('User has been suspended.');
+        }
+
+        const { token, expiresAt, tokenHash } = this.emailVerificationTokenService.generate();
         await this.emailVerificationTokenRepository.create({
             userId: user.id,
             tokenHash,
@@ -51,19 +59,7 @@ export class SendResetPasswordEmailUseCase implements ISendResetPasswordEmailUse
         return null;
     }
 
-    private generateToken() {
-        const verificationToken = randomBytes(32).toString('hex');
-        const verificationTokenExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
-        const verificationTokenHash = createHash('sha256')
-            .update(verificationToken)
-            .digest('hex');
 
-        return {
-            token: verificationToken,
-            expiresAt: verificationTokenExpiresAt,
-            tokenHash: verificationTokenHash,
-        };
-    }
 
     private async sendEmailToken(name: string, email: string, token: string) {
         const url = 'http://localhost:3000/api/v1/auth/reset-password/' + token;

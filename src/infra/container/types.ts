@@ -51,7 +51,7 @@ export const TYPES_SERVICE = {
   IEncryptService: Symbol.for('IEncryptService'),
   IAuthSessionService: Symbol.for('IAuthSessionService'),
   IEmailService: Symbol.for('IEmailService'),
-  ITokenValidationService: Symbol.for('ITokenValidationService'),
+  IEmailVerificationTokenService: Symbol.for('IEmailVerificationTokenService'),
 };
 
 export const TYPES_MIDDLEWARE = {

@@ -11,9 +11,9 @@ import type {
 } from './ISignupUseCase.js';
 import type { IEncryptService } from '../../../../domain/services/IEncryptService.js';
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
-import { createHash, randomBytes } from 'crypto';
 import type { IEmailService } from '../../../../domain/services/IEmailService.js';
 import type { IEmailVerificationTokenRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
+import type { IEmailVerificationTokenService } from '../../../services/EmailVerificationTokenService.js';
 import { emailRender } from '../../../../infra/services/email/emailRender.js';
 
 @injectable()
@@ -30,7 +30,10 @@ export class SignupUseCase implements ISignupUseCase {
 
     @inject(TYPES_EMAIL_VERIFICATION_TOKEN.IEmailVerificationTokenRepository)
     private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
-  ) {}
+
+    @inject(TYPES_SERVICE.IEmailVerificationTokenService)
+    private readonly emailVerificationTokenService: IEmailVerificationTokenService,
+  ) { }
 
   async execute(params: ISignupInputUseCase): Promise<ISignupOutputUseCase> {
     const { name, email, password } = params;
@@ -41,7 +44,7 @@ export class SignupUseCase implements ISignupUseCase {
       passwordHash,
     });
 
-    const { token, expiresAt, tokenHash } = this.generateToken();
+    const { token, expiresAt, tokenHash } = this.emailVerificationTokenService.generate();
     await this.emailVerificationTokenRepository.create({
       userId: user.id,
       tokenHash,
@@ -53,19 +56,7 @@ export class SignupUseCase implements ISignupUseCase {
     return user;
   }
 
-  private generateToken() {
-    const verificationToken = randomBytes(32).toString('hex');
-    const verificationTokenExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    const verificationTokenHash = createHash('sha256')
-      .update(verificationToken)
-      .digest('hex');
 
-    return {
-      token: verificationToken,
-      expiresAt: verificationTokenExpiresAt,
-      tokenHash: verificationTokenHash,
-    };
-  }
 
   private async sendEmailToken(name: string, email: string, token: string) {
     const url = 'http://localhost:3000/api/v1/auth/email/' + token;

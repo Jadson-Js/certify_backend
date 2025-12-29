@@ -15,8 +15,21 @@ export class EmailVerificationTokenEntity implements IEmailVerificationTokenEnti
     private readonly _expiresAt: Date,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
-  ) {}
+  ) { }
 
+  // Static factory method
+  static from(data: IEmailVerificationTokenEntity): EmailVerificationTokenEntity {
+    return new EmailVerificationTokenEntity(
+      data.id,
+      data.userId,
+      data.tokenHash,
+      data.expiresAt,
+      data.createdAt,
+      data.updatedAt,
+    );
+  }
+
+  // Getters
   get id(): string {
     return this._id;
   }
@@ -40,4 +53,10 @@ export class EmailVerificationTokenEntity implements IEmailVerificationTokenEnti
   get updatedAt(): Date {
     return this._updatedAt;
   }
+
+  // Domain logic methods
+  isExpired(): boolean {
+    return new Date() > this._expiresAt;
+  }
 }
+

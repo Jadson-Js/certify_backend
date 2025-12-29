@@ -20,7 +20,7 @@ import type { IUserRepository } from '../../../../domain/repositories/IUserRepos
 import { extractExpiresAtInToken } from '../../../../shared/utils/extractExpiresAtInToken.js';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IJwtService } from '../../../../domain/services/IJwtService.js';
-import type { IAuthSessionService } from '../../../../domain/services/IAuthSessionService.js';
+import type { IAuthSessionService } from '../../../services/AuthSessionService.js';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
 
 @injectable()
@@ -40,16 +40,21 @@ export class LoginUseCase implements ILoginUseCase {
 
     @inject(TYPES_SERVICE.IAuthSessionService)
     private readonly authSessionService: IAuthSessionService,
-  ) {}
+  ) { }
 
   async execute(params: ILoginInputUseCase): Promise<ILoginOutputUseCase> {
     const { email, password } = params;
 
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundError(`User not found by email: ${email}`);
-    if (!user.verifiedAt)
+
+    // Use domain methods for validation
+    if (!user.isVerified()) {
       throw new ConflictError('Email has not yet been verified.');
-    if (user.suspendedAt) throw new ConflictError('User has been suspended.');
+    }
+    if (user.isSuspended()) {
+      throw new ConflictError('User has been suspended.');
+    }
 
     const validPassword = await this.encryptService.compare(
       password,

@@ -5,6 +5,7 @@ import type {
 } from '../../../../domain/repositories/IUserSuspendedRepository.js';
 import { prisma } from '../../../../../prisma/prisma.js';
 import type { IUserSuspendedEntity } from '../../../../domain/entities/userSuspended.entity.js';
+import { UserSuspendedEntity } from '../../../../domain/entities/userSuspended.entity.js';
 
 @injectable()
 export class UserSuspendedRepositoryPostgres implements IUserSuspendedRepository {
@@ -15,6 +16,6 @@ export class UserSuspendedRepositoryPostgres implements IUserSuspendedRepository
       data: params,
     });
 
-    return result;
+    return UserSuspendedEntity.from(result);
   }
 }

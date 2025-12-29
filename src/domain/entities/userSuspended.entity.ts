@@ -26,6 +26,19 @@ export class UserSuspendedEntity implements IUserSuspendedEntity {
     private readonly _updatedAt: Date,
   ) { }
 
+  // Static factory method
+  static from(data: IUserSuspendedEntity): UserSuspendedEntity {
+    return new UserSuspendedEntity(
+      data.id,
+      data.userId,
+      data.category,
+      data.details,
+      data.createdAt,
+      data.updatedAt,
+    );
+  }
+
+  // Getters
   get id(): string {
     return this._id;
   }

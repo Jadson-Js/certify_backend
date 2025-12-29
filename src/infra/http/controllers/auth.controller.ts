@@ -11,6 +11,13 @@ import type { ILogoutUseCase } from '../../../application/useCase/auth/logout/IL
 import type { IVerifyEmailTokenUseCase } from '../../../application/useCase/auth/verifyEmailToken/IVerifyEmailTokenUseCase.js';
 import type { ISendResetPasswordEmailUseCase } from '../../../application/useCase/auth/sendResetPasswordEmail/ISendResetPasswordEmailUseCase.js';
 import type { IResetPasswordUseCase } from '../../../application/useCase/auth/resetPassword/IResetPasswordUseCase.js';
+import {
+  signupSchema,
+  loginSchema,
+  verifyEmailTokenSchema,
+  sendResetPasswordEmailSchema,
+  resetPasswordSchema,
+} from '../schemas/auth.schemas.js';
 
 @injectable()
 export class AuthController {
@@ -35,31 +42,20 @@ export class AuthController {
 
     @inject(TYPES_AUTH.IVerifyEmailTokenUseCase)
     private readonly verifyEmailTokenUseCase: IVerifyEmailTokenUseCase,
-  ) {}
+  ) { }
 
   async signup(req: Request, res: Response) {
-    const data = req.body;
+    const data = signupSchema.parse(req.body);
 
-    const input = {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-    };
-
-    const response = await this.signupUseCase.execute(input);
+    const response = await this.signupUseCase.execute(data);
 
     return ok(res, 201, signupPresenter(response));
   }
 
   async login(req: Request, res: Response) {
-    const data = req.body;
+    const data = loginSchema.parse(req.body);
 
-    const input = {
-      email: data.email,
-      password: data.password,
-    };
-
-    const response = await this.loginUseCase.execute(input);
+    const response = await this.loginUseCase.execute(data);
 
     res.cookie('accessToken', response.accessToken.token, {
       expires: response.accessToken.expiresAt,
@@ -113,34 +109,25 @@ export class AuthController {
   }
 
   async verifyEmailToken(req: Request, res: Response) {
-    const { token } = req.body;
+    const data = verifyEmailTokenSchema.parse(req.body);
 
-    await this.verifyEmailTokenUseCase.execute({ token });
+    await this.verifyEmailTokenUseCase.execute(data);
 
     return ok(res, 200);
   }
 
   async sendEmailToResetPassword(req: Request, res: Response) {
-    const data = req.body;
+    const data = sendResetPasswordEmailSchema.parse(req.body);
 
-    const input = {
-      email: data.email,
-    };
-
-    await this.sendResetPasswordEmailUseCase.execute(input);
+    await this.sendResetPasswordEmailUseCase.execute(data);
 
     return ok(res, 200);
   }
 
   async resetPassword(req: Request, res: Response) {
-    const data = req.body;
+    const data = resetPasswordSchema.parse(req.body);
 
-    const input = {
-      token: data.token,
-      password: data.password,
-    };
-
-    await this.resetPasswordUseCase.execute(input);
+    await this.resetPasswordUseCase.execute(data);
 
     return ok(res, 200);
   }

@@ -2,15 +2,9 @@ import { inject, injectable } from 'inversify';
 import { TYPES_AUTH, TYPES_MIDDLEWARE } from '../../container/types.js';
 import type { AuthController } from '../controllers/auth.controller.js';
 import { Router } from 'express';
-import {
-  loginSchema,
-  signupSchema,
-  sendEmailToResetPasswordSchema,
-  verifyEmailTokenSchema,
-  resetPasswordSchemas,
-} from '../middlewares/zod/auth.schema.js';
 import { validate } from '../middlewares/validate.js';
 import { type IEnsureAuthenticated } from '../middlewares/ensureAuthentticated.js';
+import { loginSchema, resetPasswordSchema, sendResetPasswordEmailSchema, signupSchema, verifyEmailTokenSchema } from '../schemas/auth.schemas.js';
 
 @injectable()
 export class AuthRoutes {
@@ -20,7 +14,7 @@ export class AuthRoutes {
 
     @inject(TYPES_MIDDLEWARE.IEnsureAuthenticated)
     private readonly ensureAuthenticated: IEnsureAuthenticated,
-  ) {}
+  ) { }
 
   execute() {
     const router = Router();
@@ -51,13 +45,14 @@ export class AuthRoutes {
 
     router.post(
       '/send-reset-password',
-      validate(sendEmailToResetPasswordSchema, 'body'),
+      validate(sendResetPasswordEmailSchema
+        , 'body'),
       this.authController.sendEmailToResetPassword.bind(this.authController),
     );
 
     router.post(
       '/reset-password',
-      validate(resetPasswordSchemas, 'body'),
+      validate(resetPasswordSchema, 'body'),
       this.authController.resetPassword.bind(this.authController),
     );
 

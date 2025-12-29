@@ -1,4 +1,4 @@
-import type { IEmailVerificationTokenEntity } from '../entities/emailVerificationToken.entity.js';
+import type { EmailVerificationTokenEntity } from '../entities/emailVerificationToken.entity.js';
 
 export interface ICreateEmailVerificationTokenInputRepository {
   userId: string;
@@ -7,9 +7,9 @@ export interface ICreateEmailVerificationTokenInputRepository {
 }
 
 export interface IEmailVerificationTokenRepository {
-  findByHashToken(token: string): Promise<IEmailVerificationTokenEntity | null>;
+  findByHashToken(token: string): Promise<EmailVerificationTokenEntity | null>;
   create(
     params: ICreateEmailVerificationTokenInputRepository,
-  ): Promise<IEmailVerificationTokenEntity>;
+  ): Promise<EmailVerificationTokenEntity>;
   deleteById(id: string): Promise<null>;
 }

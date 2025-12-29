@@ -1,4 +1,5 @@
-export interface IUserEntity {
+// Data-only interface for plain objects (e.g., from database)
+export interface IUserData {
   id: string;
   name: string;
   email: string;
@@ -7,6 +8,12 @@ export interface IUserEntity {
   suspendedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+// Full entity interface with domain methods
+export interface IUserEntity extends IUserData {
+  isVerified(): boolean;
+  isSuspended(): boolean;
 }
 
 export class UserEntity implements IUserEntity {
@@ -21,6 +28,21 @@ export class UserEntity implements IUserEntity {
     private readonly _updatedAt: Date,
   ) { }
 
+  // Static factory method
+  static from(data: IUserData): UserEntity {
+    return new UserEntity(
+      data.id,
+      data.name,
+      data.email,
+      data.passwordHash,
+      data.verifiedAt,
+      data.suspendedAt,
+      data.createdAt,
+      data.updatedAt,
+    );
+  }
+
+  // Getters
   get id(): string {
     return this._id;
   }
@@ -52,4 +74,14 @@ export class UserEntity implements IUserEntity {
   get updatedAt(): Date {
     return this._updatedAt;
   }
+
+  // Domain logic methods
+  isVerified(): boolean {
+    return this._verifiedAt !== null;
+  }
+
+  isSuspended(): boolean {
+    return this._suspendedAt !== null;
+  }
 }
+

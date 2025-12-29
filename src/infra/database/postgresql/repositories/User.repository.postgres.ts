@@ -1,5 +1,6 @@
 import { injectable } from 'inversify';
 import type { IUserEntity } from '../../../../domain/entities/user.entity.js';
+import { UserEntity } from '../../../../domain/entities/user.entity.js';
 import type {
   ICreateUserInputRepository,
   IUpdateUserPasswordHashInputRepository,
@@ -14,7 +15,7 @@ export class UserRepositoryPostgres implements IUserRepository {
   async findAll(): Promise<IUserEntity[]> {
     const results = await prisma.user.findMany();
 
-    return results;
+    return results.map((user) => UserEntity.from(user));
   }
 
   async findById(id: string): Promise<IUserEntity | null> {
@@ -22,7 +23,7 @@ export class UserRepositoryPostgres implements IUserRepository {
 
     if (!result) return null;
 
-    return result;
+    return UserEntity.from(result);
   }
 
   async findByEmail(email: string): Promise<IUserEntity | null> {
@@ -32,7 +33,7 @@ export class UserRepositoryPostgres implements IUserRepository {
 
     if (!result) return null;
 
-    return result;
+    return UserEntity.from(result);
   }
 
   async create(params: ICreateUserInputRepository): Promise<IUserEntity> {
@@ -40,7 +41,7 @@ export class UserRepositoryPostgres implements IUserRepository {
       data: params,
     });
 
-    return result;
+    return UserEntity.from(result);
   }
 
   async updateSuspendedAtById(
@@ -53,7 +54,7 @@ export class UserRepositoryPostgres implements IUserRepository {
       },
     });
 
-    return result;
+    return UserEntity.from(result);
   }
 
   async updateVerifiedAtById(
@@ -66,7 +67,7 @@ export class UserRepositoryPostgres implements IUserRepository {
       },
     });
 
-    return result;
+    return UserEntity.from(result);
   }
 
   async updatePasswordHashById(
@@ -79,6 +80,6 @@ export class UserRepositoryPostgres implements IUserRepository {
       },
     });
 
-    return result;
+    return UserEntity.from(result);
   }
 }

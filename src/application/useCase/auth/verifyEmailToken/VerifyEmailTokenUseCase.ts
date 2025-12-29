@@ -7,7 +7,7 @@ import {
 
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import type { IEmailVerificationTokenRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
-import type { ITokenValidationService } from '../../../../domain/services/ITokenValidationService.js';
+import type { IEmailVerificationTokenService } from '../../../services/EmailVerificationTokenService.js';
 import type {
   IVerifyEmailTokenInputUseCase,
   IVerifyEmailTokenUseCase,
@@ -22,14 +22,14 @@ export class VerifyEmailTokenUseCase implements IVerifyEmailTokenUseCase {
     @inject(TYPES_EMAIL_VERIFICATION_TOKEN.IEmailVerificationTokenRepository)
     private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
 
-    @inject(TYPES_SERVICE.ITokenValidationService)
-    private readonly tokenValidationService: ITokenValidationService,
+    @inject(TYPES_SERVICE.IEmailVerificationTokenService)
+    private readonly emailVerificationTokenService: IEmailVerificationTokenService,
   ) { }
 
   async execute(params: IVerifyEmailTokenInputUseCase): Promise<null> {
     const { token } = params;
 
-    const emailVerification = await this.tokenValidationService.validateToken(token);
+    const emailVerification = await this.emailVerificationTokenService.validate(token);
 
     await this.userRepository.updateVerifiedAtById({
       id: emailVerification.userId,

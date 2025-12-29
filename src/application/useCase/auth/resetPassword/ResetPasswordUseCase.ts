@@ -12,7 +12,7 @@ import type { IEncryptService } from '../../../../domain/services/IEncryptServic
 import type { IUserRepository } from '../../../../domain/repositories/IUserRepository.js';
 import type { IEmailService } from '../../../../domain/services/IEmailService.js';
 import type { IEmailVerificationTokenRepository } from '../../../../domain/repositories/IEmailVerificationTokenRepository.js';
-import type { ITokenValidationService } from '../../../../domain/services/ITokenValidationService.js';
+import type { IEmailVerificationTokenService } from '../../../services/EmailVerificationTokenService.js';
 
 @injectable()
 export class ResetPasswordUseCase implements IResetPasswordUseCase {
@@ -29,16 +29,15 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
     @inject(TYPES_EMAIL_VERIFICATION_TOKEN.IEmailVerificationTokenRepository)
     private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
 
-    @inject(TYPES_SERVICE.ITokenValidationService)
-    private readonly tokenValidationService: ITokenValidationService,
-  ) {}
+    @inject(TYPES_SERVICE.IEmailVerificationTokenService)
+    private readonly emailVerificationTokenService: IEmailVerificationTokenService,
+  ) { }
 
   async execute(params: IResetPasswordInputUseCase): Promise<null> {
     const { token, password } = params;
     const passwordHash = await this.encryptService.hash(password);
 
-    const emailVerification =
-      await this.tokenValidationService.validateToken(token);
+    const emailVerification = await this.emailVerificationTokenService.validate(token);
 
     await this.userRepository.updatePasswordHashById({
       id: emailVerification.userId,

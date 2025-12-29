@@ -1,97 +1,42 @@
-src/
-├── application/
-│ └── useCases/
-│ └── user/
-│ └── create/
-│ ├── CreateUserUseCase.ts
-│ ├── ICreateUserUseCase.ts
-│ └── UserMapper.ts
-│
-├── domain/
-│ ├── entities/
-│ │ └── User.ts
-│ └── repositories/
-│ └── IUserRepository.ts  
-│
-├── infra/
-│ ├── database/
-│ │ └── postgres/
-│ │ └── user.repository.postgres.ts  
-│ │
-│ └── http/
-│ ├── controllers/
-│ │ └── CreateUserController.ts
+Análise Arquitetural Completa
+Criei uma análise detalhada das principais falhas arquiteturais do seu código. Aqui está um resumo executivo:
 
-│ ├── routes/
-│ │ └── user.routes.ts
-│ └── app.ts <-- Config do Express (server)
-│
-├── shared/ <-- Novo agrupamento
-│ ├── errors/
-│ │ └── AppError.ts
-│ └── env/
-│ └── index.ts
-│
-└── main.ts <-- Entry Point (Starta tudo)
+🔴 Falhas Críticas Identificadas
 
-### Fluxo Otimizado (Best Practices)
+1. Entidades de Domínio Não Utilizadas
+   Você criou classes de entidade com encapsulamento (
+   UserEntity
+   , AuthSessionEntity), mas os repositórios retornam apenas interfaces simples. As entidades são código morto - nunca são instanciadas.
 
-1.  **Client:** Envia `email` e `senha` + **Device Info** (User-Agent/Fingerprint).
-2.  **Server (Validação de Entrada):** Valida formato do email e tamanho da senha (usando Zod/Joi) _antes_ de bater no banco.
-3.  **Server (Busca User):** Busca usuário pelo email.
-    - _Check:_ Usuário existe?
-    - _Check:_ Usuário está ativo/verificado? (Evita login de contas banidas).
-4.  **Server (Validação de Senha):** Compara hash da senha (Bcrypt/Argon2).
-5.  **Server (Otimização - Geração em Memória):**
-    - Em vez de salvar e depois atualizar, **gere o UUID da sessão no código (Node.js)**.
-    - Com esse UUID, gere o **Refresh Token** (JWT).
-    - Gere o **Hash do Refresh Token** (SHA256 ou Bcrypt).
-    - _Motivo:_ Isso permite fazer apenas **1 insert** no banco em vez de "Create + Update".
-6.  **Server (Persistência Blindada):** Salva na tabela `user_sessions`:
-    - `id`: O UUID gerado no passo 5.
-    - `userId`: ID do usuário.
-    - `tokenHash`: O hash do refresh token (Se o banco vazar, ninguém rouba as sessões).
-    - `clientInfo`: IP e User-Agent (Para o usuário saber "Logado no Firefox - Windows").
-7.  **Server (Access Token):** Gera o `accessToken` com ID e Role.
-8.  **Server (Resposta Segura):**
-    - Envia `accessToken` no **Corpo (JSON)**.
-    - Envia `refreshToken` via **HttpOnly Cookie** (Proteção contra roubo via XSS no front-end).
+2. Vulnerabilidade de Segurança - Tokens Compartilhados
+   A tabela email_verification_tokens é usada tanto para verificação de email quanto para reset de senha. Isso significa que um token de verificação pode ser usado para resetar senha - falha crítica de segurança.
 
----
+3. Confusão de Services
+   IAuthSessionService
+   está em domain/services mas depende de repositórios e infraestrutura. Isso viola a Arquitetura Limpa - o domínio não deveria conhecer infraestrutura.
 
-### Entrada
+4. Duplicação Massiva de Código
+   A lógica de geração de token está duplicada identicamente em
+   SignupUseCase
+   e
+   SendResetPasswordEmailUseCase
+   .
 
-O **Client** faz uma requisição para a API enviando apenas o **Refresh Token** (idealmente via Cookie HttpOnly, mas pode ser via Body/Header).
+5. Controllers Fazendo Mapeamento Manual
+   Sem validação em runtime, vulnerável a ataques com campos extras.
 
-### Processamento no Servidor
+🟡 Falhas Moderadas
+Falta de Value Objects (email, password são strings primitivas)
+Use Cases com múltiplas responsabilidades (enviam emails, conhecem URLs)
+Ausência de Agregados (User deveria gerenciar suas próprias sessões)
+Sem Domain Events (ações importantes não são rastreadas)
+Repositories anêmicos (apenas wrappers do Prisma)
+📋 Prioridades de Refatoração
+Alta Prioridade:
 
-1.  **Validação Criptográfica (JWT)**
-    - O servidor verifica se a assinatura do Refresh Token é válida usando o `REFRESH_SECRET`.
-    - Verifica se o token não está expirado (data de validade do próprio token).
-    - _Se falhar:_ Retorna erro 401 (Não autorizado) e força logout no front.
+Separar tabelas de tokens (segurança)
+Implementar uso de entidades de domínio
+Eliminar duplicação de código
+Média Prioridade: 4. Reorganizar services 5. Adicionar validação com Zod 6. Criar Value Objects
 
-2.  **Extração de Dados**
-    - O servidor decodifica o payload do token para pegar o `sessionId` (ID da sessão) e o `userId`.
-
-3.  **Busca e Validação no Banco de Dados**
-    - O servidor busca na tabela `user_sessions` pelo `id` igual ao `sessionId` extraído.
-    - **Check 1:** A sessão existe?
-    - **Check 2:** A data `expiresAt` no banco ainda é válida?
-    - **Check 3 (Crucial):** O servidor compara se o Refresh Token recebido bate com o `tokenHash` salvo no banco.
-      - _Por que isso?_ Se o hash não bater, significa que alguém pode estar tentando usar um token antigo ou roubado (Reuso de Token). Nesse caso, por segurança, você deve **invalidar a sessão imediatamente**.
-
-4.  **Rotação de Token (Refresh Token Rotation) - _Recomendado_**
-    - Em vez de apenas entregar um novo Access Token, o servidor decide trocar **tudo**.
-    - Gera um **novo** Access Token.
-    - Gera um **novo** Refresh Token (com novo tempo de vida).
-    - Gera o hash desse novo Refresh Token.
-
-5.  **Atualização no Banco**
-    - Atualiza a sessão encontrada com o novo `tokenHash`.
-    - (Opcional) Atualiza a data de expiração da sessão, estendendo o login do usuário.
-
-### Saída (Resposta)
-
-6.  **Retorno ao Client**
-    - Envia o **novo Access Token** (JSON).
-    - Envia o **novo Refresh Token** (Cookie/JSON).
+Veja a análise completa no documento criado para detalhes, exemplos de código e soluções propostas.

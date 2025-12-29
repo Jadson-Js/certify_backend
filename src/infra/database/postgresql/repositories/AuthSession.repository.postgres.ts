@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import type { IAuthSessionRepository } from '../../../../domain/repositories/IAuthSessionRepository.js';
 import type { IAuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
+import { AuthSessionEntity } from '../../../../domain/entities/authSession.entity.js';
 import { prisma } from '../../../../../prisma/prisma.js';
 
 @injectable()
@@ -10,7 +11,9 @@ export class AuthSessionRepositoryPostgres implements IAuthSessionRepository {
       where: { id },
     });
 
-    return result;
+    if (!result) return null;
+
+    return AuthSessionEntity.from(result);
   }
 
   async create(params: IAuthSessionEntity): Promise<IAuthSessionEntity> {
@@ -18,7 +21,7 @@ export class AuthSessionRepositoryPostgres implements IAuthSessionRepository {
       data: params,
     });
 
-    return result;
+    return AuthSessionEntity.from(result);
   }
 
   async deleteById(id: string): Promise<null> {
