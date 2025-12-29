@@ -3,10 +3,15 @@ import type { IUserEntity } from '../../../../domain/entities/User.entity.js';
 import { UserEntity } from '../../../../domain/entities/User.entity.js';
 import type {
   ICreateUserInputRepository,
+  ICreateUserWithVerificationTokenInput,
+  ICreateUserWithVerificationTokenOutput,
+  IResetPasswordAndDeleteTokenInput,
+  ISuspendUserAndRevokeSessionsInput,
   IUpdateUserPasswordHashInputRepository,
   IUpdateUserSuspendedAtInputRepository,
   IUpdateUserVerifiedAtInputRepository,
   IUserRepository,
+  IVerifyUserAndDeleteTokenInput,
 } from '../../../../domain/repositories/IUserRepository.js';
 import { prisma } from '../../../../../prisma/prisma.js';
 
@@ -81,5 +86,92 @@ export class UserRepositoryPostgres implements IUserRepository {
     });
 
     return UserEntity.from(result);
+  }
+
+  // Atomic transaction methods
+  async createUserWithVerificationToken(
+    params: ICreateUserWithVerificationTokenInput,
+  ): Promise<ICreateUserWithVerificationTokenOutput> {
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: params.user,
+      });
+
+      const token = await tx.emailVerificationToken.create({
+        data: {
+          userId: user.id,
+          tokenHash: params.token.tokenHash,
+          expiresAt: params.token.expiresAt,
+        },
+      });
+
+      return {
+        user: UserEntity.from(user),
+        tokenId: token.id,
+      };
+    });
+
+    return result;
+  }
+
+  async verifyUserAndDeleteToken(
+    params: IVerifyUserAndDeleteTokenInput,
+  ): Promise<IUserEntity> {
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.update({
+        where: { id: params.userId },
+        data: { verifiedAt: new Date() },
+      });
+
+      await tx.emailVerificationToken.delete({
+        where: { id: params.tokenId },
+      });
+
+      return UserEntity.from(user);
+    });
+
+    return result;
+  }
+
+  async resetPasswordAndDeleteToken(
+    params: IResetPasswordAndDeleteTokenInput,
+  ): Promise<IUserEntity> {
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.update({
+        where: { id: params.userId },
+        data: { passwordHash: params.passwordHash },
+      });
+
+      await tx.emailVerificationToken.delete({
+        where: { id: params.tokenId },
+      });
+
+      return UserEntity.from(user);
+    });
+
+    return result;
+  }
+
+  async suspendUserAndRevokeSessions(
+    params: ISuspendUserAndRevokeSessionsInput,
+  ): Promise<void> {
+    await prisma.$transaction(async (tx) => {
+      await tx.userSuspended.create({
+        data: {
+          userId: params.userId,
+          category: params.suspensionData.category,
+          details: params.suspensionData.details,
+        },
+      });
+
+      await tx.authSession.deleteMany({
+        where: { userId: params.userId },
+      });
+
+      await tx.user.update({
+        where: { id: params.userId },
+        data: { suspendedAt: new Date() },
+      });
+    });
   }
 }

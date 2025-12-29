@@ -29,16 +29,14 @@ export class VerifyEmailTokenUseCase implements IVerifyEmailTokenUseCase {
   async execute(params: IVerifyEmailTokenInputUseCase): Promise<null> {
     const { token } = params;
 
-    const emailVerification = await this.emailVerificationTokenService.validate(token);
+    const emailVerification =
+      await this.emailVerificationTokenService.validate(token);
 
-    await this.userRepository.updateVerifiedAtById({
-      id: emailVerification.userId,
-      verifiedAt: new Date(),
+    // ✅ ATOMIC: User verified and Token deleted together in a transaction
+    await this.userRepository.verifyUserAndDeleteToken({
+      userId: emailVerification.userId,
+      tokenId: emailVerification.id,
     });
-
-    await this.emailVerificationTokenRepository.deleteById(
-      emailVerification.id,
-    );
 
     return null;
   }

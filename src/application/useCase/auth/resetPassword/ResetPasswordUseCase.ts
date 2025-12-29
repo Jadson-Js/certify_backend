@@ -37,16 +37,15 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
     const { token, password } = params;
     const passwordHash = await this.encryptService.hash(password);
 
-    const emailVerification = await this.emailVerificationTokenService.validate(token);
+    const emailVerification =
+      await this.emailVerificationTokenService.validate(token);
 
-    await this.userRepository.updatePasswordHashById({
-      id: emailVerification.userId,
+    // ✅ ATOMIC: Password updated and Token deleted together in a transaction
+    await this.userRepository.resetPasswordAndDeleteToken({
+      userId: emailVerification.userId,
+      tokenId: emailVerification.id,
       passwordHash,
     });
-
-    await this.emailVerificationTokenRepository.deleteById(
-      emailVerification.id,
-    );
 
     return null;
   }

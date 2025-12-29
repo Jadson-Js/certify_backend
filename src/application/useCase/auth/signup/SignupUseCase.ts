@@ -38,25 +38,28 @@ export class SignupUseCase implements ISignupUseCase {
   async execute(params: ISignupInputUseCase): Promise<ISignupOutputUseCase> {
     const { name, email, password } = params;
     const passwordHash = await this.encryptService.hash(password);
-    const user = await this.userRepository.create({
-      name,
-      email,
-      passwordHash,
+
+    const { token, expiresAt, tokenHash } =
+      this.emailVerificationTokenService.generate();
+
+    // ✅ ATOMIC: User and Token created together in a transaction
+    const { user } = await this.userRepository.createUserWithVerificationToken({
+      user: {
+        name,
+        email,
+        passwordHash,
+      },
+      token: {
+        tokenHash,
+        expiresAt,
+      },
     });
 
-    const { token, expiresAt, tokenHash } = this.emailVerificationTokenService.generate();
-    await this.emailVerificationTokenRepository.create({
-      userId: user.id,
-      tokenHash,
-      expiresAt,
-    });
-
+    // Email is sent AFTER the transaction (doesn't affect atomicity)
     await this.sendEmailToken(name, email, token);
 
     return user;
   }
-
-
 
   private async sendEmailToken(name: string, email: string, token: string) {
     const url = 'http://localhost:3000/api/v1/auth/email/' + token;
